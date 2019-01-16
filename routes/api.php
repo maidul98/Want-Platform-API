@@ -1,0 +1,124 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
+use App\Events\MessageSentEvent;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+
+Route::post('login', 'PassportController@login');
+Route::post('register', 'PassportController@register');
+
+//User account actions
+Route::middleware('auth:api')->group(function () {
+    Route::get('user', 'PassportController@details');
+    Route::post('logout', 'PassportController@logout');
+    Route::post('change-password', 'PassportController@changePassword');
+});
+
+
+/**
+ * Payment endpoints
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('/pay', ['uses' =>'WantController@CompleteWant']);
+    Route::post('/addcard', ['uses' =>'PaymentController@addCard']);
+});
+
+
+/**
+ * Want endpoints
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('want', 'WantController@store');
+    Route::put('want/{id}', 'WantController@update');
+    Route::delete('want/{id}', 'WantController@destroy');
+    Route::get('want/{id}', ['uses' =>'WantController@show']);
+});
+
+/**
+ * Reviews
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('review', 'ReviewController@addReview');
+    Route::get('review/{user}', 'ReviewController@getAllReviews');
+});
+
+
+/**
+ * Conversations endpoints
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::get('convos', 'ConversationController@getConvos');
+});
+
+
+/**
+ * Messageing endpoints
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('get-message', 'MessageController@fetch');
+    Route::post('send-message', 'MessageController@sendMessage');
+});
+
+
+/**
+ * Profile
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::get('profile/{user}', 'UserController@profile');
+});
+
+/**
+ * Set and get current user avatar
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('avatar', 'SettingsController@updateAvatar');
+    Route::get('avatar', 'UserController@getAvatar');
+});
+
+/**
+ * Newsfeed
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('newsfeed', 'NewsFeedController@newsFeed');
+});
+
+/**
+ * Category
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::get('category', 'CategoryController@getAll');
+    Route::get('category/{id}', 'CategoryController@getSingle');
+});
+
+/**
+ * Settings
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('update_basic_profile', 'SettingsController@updateNameEmailTagDes');
+    Route::get('category/{id}', 'CategoryController@getSingle');
+});
+
+
+
+Route::get('event', function(){
+    event(new MessageSentEvent('heheheheh'));
+});
+
+
+
+
+
