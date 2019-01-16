@@ -9,10 +9,16 @@
 
     var pusher = new Pusher('78565ef6078f239cd16c', {
       cluster: 'us2',
-      forceTLS: true,
+      authEndpoint: 'http://127.0.0.1:8000/broadcasting/auth',
+        auth: {
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer + token'
+            }
+        }
     });
 
-    var channel = pusher.subscribe('chat.1');
+    var channel = pusher.subscribe('private-chat.2');
 
     channel.bind("App\\Events\\MessageSentEvent", function(data) {
       alert(JSON.stringify(data));

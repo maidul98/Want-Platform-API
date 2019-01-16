@@ -17,10 +17,16 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 
-Broadcast::channel('conversation.{convo_id}', function ($user, $convo_id) {
+Broadcast::channel('chat.{convo_id}', function ($user, $convo_id) {
 
-    return Conversation::findOrFail($convo_id)->where('wanter_id', $user->id)->
-    orWhere('fulfiller_id', $user->id);
+    $ful = Conversation::findOrFail($convo_id)->fulfiller_id;
+    $want = Conversation::findOrFail($convo_id)->wanter_id;
+    
+    if($ful == $user->id || $want == $user->id) return true;
+
+    return false;
 
 });
+
+
 

@@ -36,6 +36,6 @@ class MessageSentEvent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('conversation.'.$this->conversation_id);
+        return new PrivateChannel('chat.'.$this->conversation_id);
     }
 }

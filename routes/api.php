@@ -118,7 +118,11 @@ Route::get('event', function(){
     event(new MessageSentEvent('heheheheh'));
 });
 
-
-
-
-
+/**
+ * Pusher auth.
+ * If user belongs to the the chat then return a token.
+ */
+Route::post('pusher-auth', function() {
+    $pusher = new Pusher\Pusher( env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), array('cluster' => env('PUSHER_APP_CLUSTER')) );
+    return $pusher->socket_auth(request()->channel_name, request()->socket_id);
+});
