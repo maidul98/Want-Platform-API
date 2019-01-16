@@ -115,7 +115,7 @@ Route::middleware('auth:api')->group(function () {
 
 
 Route::get('event', function(){
-    event(new MessageSentEvent("sddsd", 2, Auth::user()));
+    broadcast(new MessageSentEvent("sddsd", 2, Auth::user()));
 });
 
 /**
