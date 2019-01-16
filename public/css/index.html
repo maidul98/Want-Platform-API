@@ -13,13 +13,12 @@
         auth: {
             headers: {
                 'Accept': 'application/json',
-                'Authorization': 'Bearer + token'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjZlNzhmYWU1NDUxYjM5ODc2YzFhZTZjZjUxZjJlZGY2NDU0Y2RkNWQ3NTFmZmE1MmQyNzE2NDMwZjcyNmRhYmQwOTA2ZGI1MWY5ZWYyNzk5In0.eyJhdWQiOiIxIiwianRpIjoiNmU3OGZhZTU0NTFiMzk4NzZjMWFlNmNmNTFmMmVkZjY0NTRjZGQ1ZDc1MWZmYTUyZDI3MTY0MzBmNzI2ZGFiZDA5MDZkYjUxZjllZjI3OTkiLCJpYXQiOjE1NDY3OTk5MjgsIm5iZiI6MTU0Njc5OTkyOCwiZXhwIjoxNTc4MzM1OTI4LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.JFUGaD-IEzjw3yv3jSavmoNgvO8FUvB1VbhTvrt0OcXeEdtBKkWTahPzww6SZzvmevM3lNqMRLlBU1LwnDV0D1f1N6dnwxexf2QcfCorrS93Vi9cxJ-QgCsOPVDgITp5xxYT0JrMGqycR7cNhPTU2OXi-bjzvrgStkuCovoJOMwbY1SJgecGTmPDvhYRj4_QyAeA_ENdSkgoj6ujg0M2TI_0He18FnznzvMtp-LOMx1C_4pACw6BE9LVKP0R7264IRj0t_hyZzvPvNp6NYkmwUFqki5hZrmiD5uRlhF4H6ZHdjW_Z2ZxIJQi7RdBBN2aUG3tvu4spG2dCozmyCGuqZiOwrw1aII0oEfmBr64kohjrMCz76k2B9VP4QHxn2i0JosxkcCidCV_67OdFu7hO52hY5mNWuhUQnqAV3fTBa5wU7rbwuSp-AqBpalPKrFB7VRxdyP98lQuegD6OC0i56whFRnGJCWBofi1pTzGx9gllfoM_eqPDv0WeQKug-VuP-3UH_YB_BeV5TtJye9Y05sQLXhMuLwS5jj-V4_yiqN5tx7ASkMSTrpmL4FLZAIOlY_IGzwuVIyE0waIwDMSx0iV_GILw3SvAj1lxerrKZ1x2yjHQe5SOITfTCHmGiz-sg8TSbNgzxIQBkaP8CJpkh5OcQwzY4LbxmUq8F9qS4Q'
             }
         }
     });
 
     var channel = pusher.subscribe('private-chat.2');
-
     channel.bind("App\\Events\\MessageSentEvent", function(data) {
       alert(JSON.stringify(data));
     });
