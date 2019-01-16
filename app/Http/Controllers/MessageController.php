@@ -54,13 +54,13 @@ class MessageController extends Controller
         try{
             Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
             orWhere('fulfiller_id', Auth::user()->id)->firstOrFail();
-            $convo = new Message();
-            $convo->message = $request->message;
-            $convo->user_id = Auth::user()->id;
-            $convo->conversation_id = $request->convo_id;
-            $convo->save();
+            $message = new Message();
+            $message->message = $request->message;
+            $message->user_id = Auth::user()->id;
+            $message->conversation_id = $request->convo_id;
+            $message->save();
             
-            broadcast(new MessageSentEvent($request->message, $request->convo_id, Auth::user()))->toOthers();
+            broadcast(new MessageSentEvent($message, $request->convo_id, Auth::user()))->toOthers();
 
         }catch(Exception $e){
             return response()->json(['error'=> 'Your message could not be sent for an unknown reason'], 400);  
