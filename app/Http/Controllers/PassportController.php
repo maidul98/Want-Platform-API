@@ -184,7 +184,7 @@ class PassportController extends Controller
                 'first_name' => $user->user['given_name'],
                 'last_name' => $user->user['family_name'],
                 'email' => $user->user['email'],
-                'password' => null,
+                'password' => '',
             ]);
 
             // $newUser                  = new User;
