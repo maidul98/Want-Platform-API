@@ -165,7 +165,7 @@ class PassportController extends Controller
     {
         try {
             $user = Socialite::driver('google')->stateless()->user();
-            return $user->user['given_name'];
+            // return $user->user['given_name'];
             // return $user->email;
         } catch (\Exception $e) {
             return $e->getMessage();
@@ -181,9 +181,9 @@ class PassportController extends Controller
         } else {
             // create a new user
             User::create([
-                'first_name' => $user->given_name,
-                'last_name' => $user->family_name,
-                'email' => $user->email,
+                'first_name' => $user->user['given_name'],
+                'last_name' => $user->user['family_name'],
+                'email' => $user->user['email'],
                 'password' => null,
             ]);
 
