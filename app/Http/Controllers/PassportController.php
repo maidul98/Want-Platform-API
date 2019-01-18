@@ -181,7 +181,8 @@ class PassportController extends Controller
                 'first_name' => $user->user['given_name'],
                 'last_name' => $user->user['family_name'],
                 'email' => $user->user['email'],
-                'password' => '',
+                'password' => null,
+                'avatar' => $user->user['picture']
             ]);
 
             //return token to login the user
