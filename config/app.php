@@ -154,7 +154,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Laravel\Socialite\SocialiteServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -180,6 +180,7 @@ return [
     'aliases' => [
 
         'App' => Illuminate\Support\Facades\App::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,

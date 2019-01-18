@@ -17,9 +17,17 @@ use App\Events\MessageSentEvent;
 |
 */
 
-
+/**
+ * Normal login/register 
+ */
 Route::post('login', 'PassportController@login');
 Route::post('register', 'PassportController@register');
+
+/**
+ * Login with Google
+ */
+Route::get('redirect', 'PassportController@redirectToProvider');
+Route::get('callback', 'PassportController@handleProviderCallback');
 
 //User account actions
 Route::middleware('auth:api')->group(function () {
@@ -127,3 +135,4 @@ Route::post('pusher-auth', function() {
     if(Auth::user())
     return $pusher->socket_auth(request()->channel_name, request()->socket_id);
 });
+
