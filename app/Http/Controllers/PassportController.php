@@ -166,7 +166,7 @@ class PassportController extends Controller
             $user = Socialite::driver('google')->user();
             return $user;
         } catch (\Exception $e) {
-            return 'user data not found';
+            return $e->getMessaget();
         }
         // // only allow people with @company.com to login
         // if(explode("@", $user->email)[1] !== 'company.com'){
