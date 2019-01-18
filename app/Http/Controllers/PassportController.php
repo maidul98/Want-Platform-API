@@ -163,7 +163,7 @@ class PassportController extends Controller
     public function handleProviderCallback()
     {
         try {
-            $user = Socialite::driver('google')->user();
+            $user = Socialite::driver('google')->stateless()->user();
             return $user;
         } catch (\Exception $e) {
             return $e->getMessage();
