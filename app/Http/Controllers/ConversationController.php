@@ -14,10 +14,10 @@ class ConversationController extends Controller
      * Get all conversations the current user is in 
      */
 
-     public static function getConversation(){
+     public static function getConversations(){
          try{
             return Conversation::where('wanter_id', Auth::user()->id)->
-            orWhere('fulfiller_id', Auth::user()->id)->with('messages')->firstOrFail();
+            orWhere('fulfiller_id', Auth::user()->id)->get();
          }catch(Exception $e){
              return $e->getMessage();
          }

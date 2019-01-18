@@ -87,9 +87,16 @@ class WantController extends Controller
     public function destroy($id)
     {
         try{
-            $want = Want::findOrFail($id)->where('user_id', Auth::user()->id)->firstOrFail();
-            $want->delete();
+            $user_want = Want::findOrFail($id)->user_id;
+
+            if($user_want == Auth::user()->id){
+                Want::findOrFail($id)->delete();
+            }else{
+                throw new Exception("Something went wrong");
+            }
+            
             return response()->json(['message'=> 'Your want has been deleted'], 200); 
+
         }catch(Exception $e){
             return response()->json(['error'=> 'Something went wrong, please try again'], 400);  
         }
