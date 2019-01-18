@@ -165,9 +165,8 @@ class PassportController extends Controller
     {
         try {
             $user = Socialite::driver('google')->stateless()->user();
-            return $user->user;
-        } catch (\Exception $e) {
-            return $e->getMessage();
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Somthing went wrong'], 400);
         }
 
         // // check if they're an existing user
