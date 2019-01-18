@@ -165,8 +165,7 @@ class PassportController extends Controller
     {
         try {
             $user = Socialite::driver('google')->stateless()->user();
-            // return $user->user['given_name'];
-            // return $user->email;
+            return $user->user;
         } catch (\Exception $e) {
             return $e->getMessage();
         }
@@ -174,12 +173,10 @@ class PassportController extends Controller
         // // check if they're an existing user
         $existingUser = User::where('email', $user->email)->first();
         if($existingUser){
-            //find user on db
             //return token to login the user
             $token = $existingUser->createToken('login')->accessToken;
             return response()->json(['token' => $token], 200);
         } else {
-            // create a new user
             $user = User::create([
                 'first_name' => $user->user['given_name'],
                 'last_name' => $user->user['family_name'],
