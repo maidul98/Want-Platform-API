@@ -175,6 +175,7 @@ class PassportController extends Controller
         $existingUser = User::where('email', $user->email)->first();
         if($existingUser){
 
+            return "exis";
             //return token to login the user
             $token = auth()->user()->createToken('login')->accessToken;
             return response()->json(['token' => $token], 200);
@@ -187,14 +188,6 @@ class PassportController extends Controller
                 'password' => '',
             ]);
 
-            // $newUser                  = new User;
-            // $newUser->name            = $user->name;
-            // $newUser->email           = $user->email;
-            // $newUser->google_id       = $user->id;
-            // $newUser->avatar          = $user->avatar;
-            // $newUser->avatar_original = $user->avatar_original;
-            // $newUser->save();
-            
             //return token to login the user
             $token = auth()->user()->createToken('login')->accessToken;
             return response()->json(['token' => $token], 200);
