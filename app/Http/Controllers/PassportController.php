@@ -150,7 +150,7 @@ class PassportController extends Controller
             $user->user['family_name'], $user->user['email'], null);
             $register->register();
             Auth::loginUsingId($register->user->id);
-            return 1;
+            return Auth::user();
         }
     }
 
