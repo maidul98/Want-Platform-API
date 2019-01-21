@@ -148,7 +148,9 @@ class PassportController extends Controller
 
             $register = new Register($user->user['given_name'], 
             $user->user['family_name'], $user->user['email'], null);
-            return $register->register();
+            $register->register();
+            Auth::loginUsingId($register->user->id);
+            return Auth::user();
         }
     }
 
