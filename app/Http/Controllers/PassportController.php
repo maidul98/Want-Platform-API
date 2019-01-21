@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Classes\Register;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,8 +11,9 @@ use Exception;
 use App\Rating;
 use Hash;
 use Socialite;
+use App\Http\Requests\Register as RegVal;
 
-use App\Http\Requests\Register;
+// use App\Http\Requests\Register;
 class PassportController extends Controller
 {
     /**
@@ -22,59 +24,15 @@ class PassportController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Register $request){
+    public function register(RegVal $request){
         try{
-            $user = User::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-            ]);
-    
-            \Stripe\Stripe::setApiKey("sk_test_7DFayyE5PlPHvjyRAv07KC9p");
-
-            $stripeAccount = \Stripe::account()->create([
-                "country" => "US",
-                'email' => $request->email,
-                "type" => "custom",
-            ]);
-
-            $customer = \Stripe\Customer::create([
-                "email" => $request->email,
-                ]
-            );
-
-            $user->save();
-
+            $register = new Register($request->first_name, 
+            $request->last_name, $request->email, $request->password);
+            return $register->register();
         }catch(Exception $e){
-            return $e->getMessage();
+            return $e;
+            return response()->json(['error' => 'Something went wrong, please try again'], 400);
         }
-        
-        //Accept Stripe TOS
-        $stripeAccount = \Stripe\Account::retrieve($stripeAccount['id']);
-        $stripeAccount->tos_acceptance->date = time();
-        $stripeAccount->tos_acceptance->ip = $_SERVER['REMOTE_ADDR'];
-        $customer->save();
-        $stripeAccount->save();
-        
-        //Create Stripe details 
-        $stripe = StripeTable::create([
-            'user_id' => $user->id,
-            'account_id' => $stripeAccount['id'],
-            'customer_id' => $customer['id'],
-        ]);
-        $stripe->save();
-
-        //Create rating for user 
-        $rating = new Rating();
-        $rating->user_id = $user->id;
-        $rating->current_rating = 5;
-        $rating->total_ratings = 0;
-        $rating->save();
-        
-        $token = $user->createToken('login')->accessToken;
-
-        return response()->json(['token' => $token], 200);
     }
  
     /**
@@ -151,7 +109,7 @@ class PassportController extends Controller
     *
     * @return \Illuminate\Http\Response
     */
-    public function redirectToProvider()
+    public function redirectToProviderGoogle()
     {
         return Socialite::driver('google')->stateless()->redirect();
     }
@@ -161,7 +119,7 @@ class PassportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleProviderCallback()
+    public function handleProviderCallbackGoogle()
     {
         try {
             $user = Socialite::driver('google')->stateless()->user();

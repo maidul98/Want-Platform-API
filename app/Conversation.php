@@ -23,18 +23,26 @@ class Conversation extends Model
     }
 
     /**
-     * Each conversation has many messages
+     * Each conversation has one wanter
      */
     public function wanter(){
         return $this->belongsTo(User::class, 'wanter_id');
     }
 
     /**
-     * Each conversation has many messages
+     * Each conversation has one fulfiller 
      */
     public function fulfiller(){
         return $this->belongsTo(User::class, 'fulfiller_id');
     }
+
+    /**
+     * Each conversation has one fulfiller 
+     */
+    public function attachment(){
+        return $this->belongsTo(Attachment::class, 'message_id');
+    }
+    
 
     
 }

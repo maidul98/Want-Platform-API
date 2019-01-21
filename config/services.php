@@ -28,13 +28,6 @@ return [
     'sparkpost' => [
         'secret' => env('SPARKPOST_SECRET'),
     ],
-
-    'stripe' => [
-        'model' => App\User::class,
-        'key' => env('pk_test_Y3yFSy6Vi6z3krwqD80HvH8u'),
-        'secret' => env('sk_test_7DFayyE5PlPHvjyRAv07KC9p'),
-    ],
-    
     'google' => [
         'client_id'     => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),

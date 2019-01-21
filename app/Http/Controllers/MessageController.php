@@ -6,28 +6,16 @@ use Illuminate\Http\Request;
 use App\Message;
 use App\Conversation;
 use Exception;
+use Image;
+use Illuminate\Support\Facades\Storage;
+use App\Attachment;
 
 
 use App\Http\Controllers\ConversationController;
 
 use App\Events\MessageSentEvent;
-
 class MessageController extends Controller
 {
-    /**
-     * Makes sure that you can only send messages in convos you are apart of.
-     * Returns error if you are not allowed to access such  convo
-     */
-    
-    // public function __construct(){
-    //     try{
-    //         Conversation::findOrFail(request()->convo_id)->where('wanter_id', Auth::user()->id)->
-    //         orWhere('fulfiller_id', Auth::user()->id)->get();
-    //     }catch(Exception $e){
-    //        exit(var_dump(Auth::user()));
-    //     }
-    // }
-
 
     /**
      * Get all messages in this convoersation. 
@@ -36,7 +24,7 @@ class MessageController extends Controller
     public function fetch(Request $request){
         try{
             return Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
-            orWhere('fulfiller_id', Auth::user()->id)->with(['fulfiller', 'wanter', 'messages'])->latest()->firstOrFail();
+            orWhere('fulfiller_id', Auth::user()->id)->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail();
         }catch(Exception $e){
             return $e;
             return "Something went wrong";
@@ -51,18 +39,45 @@ class MessageController extends Controller
      * Returns an error if message is unable to send.
      */
     public function sendMessage(Request $request){
+        $this->validate($request, [
+            'attachment.*' => 'image|mimes:jpeg,png,jpg,gif|max:6000'
+        ]);
+
+        //check if user can send messages to this chat 
+        Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
+        orWhere('fulfiller_id', Auth::user()->id)->firstOrFail();
+
+
         try{
-            Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
-            orWhere('fulfiller_id', Auth::user()->id)->firstOrFail();
+            if($request->hasFile('attachment')){
+                $array = [];
+                foreach($request->file('attachment') as $file){
+                    $filename = 'message-attachment/'.time().'.'.$file->getClientOriginalExtension();
+                    array_push($array, $filename);
+                    Storage::disk('s3')->put($filename, fopen($file, 'r+'), 'public');
+                }
+            }
+
+            //save message
             $message = new Message();
             $message->message = $request->message;
             $message->user_id = Auth::user()->id;
             $message->conversation_id = $request->convo_id;
             $message->save();
+
+            //create records for attachments
+            if($request->hasFile('attachment')){
+                foreach($array as $img){
+                    Attachment::create(['message_id' => $message->id, 'media'=> $img]);
+                }
+            }
             
             broadcast(new MessageSentEvent($message, $request->convo_id, Auth::user()))->toOthers();
 
+            return response()->json(['message'=> 'Your message has been sent'], 200);
+
         }catch(Exception $e){
+            return $e->getMessage();
             return response()->json(['error'=> 'Your message could not be sent for an unknown reason'], 400);  
         }
 

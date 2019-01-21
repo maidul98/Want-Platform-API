@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Events\MessageSentEvent;
 
+use App\Classes\Register;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,8 +28,8 @@ Route::post('register', 'PassportController@register');
 /**
  * Login with Google
  */
-Route::get('redirect', 'PassportController@redirectToProvider');
-Route::get('callback', 'PassportController@handleProviderCallback');
+Route::get('redirect-google', 'PassportController@redirectToProviderGoogle');
+Route::get('callback-google', 'PassportController@handleProviderCallbackGoogle');
 
 //User account actions
 Route::middleware('auth:api')->group(function () {
@@ -111,7 +113,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('category', 'CategoryController@getAll');
     Route::get('category/{id}', 'CategoryController@getSingle');
 });
-
+Route::get('test1', 'CategoryController@getSingle');
 /**
  * Settings
  */
@@ -120,11 +122,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('category/{id}', 'CategoryController@getSingle');
 });
 
-
-
-Route::get('event', function(){
-    broadcast(new MessageSentEvent("sddsd", 1, Auth::user()));
+Route::get('t', function(){
+    $x = new Register();
+    return $x->cat();
 });
+
+
 
 /**
  * Pusher auth.

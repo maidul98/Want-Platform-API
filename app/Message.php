@@ -22,4 +22,11 @@ class Message extends Model
         return $this->belongsTo('App\Conversation');
     }
 
+    /**
+     * Each message belongs to a conversation 
+     */
+    public function attachments(){
+        return $this->hasMany(Attachment::class, 'message_id');
+    }
+
 }
