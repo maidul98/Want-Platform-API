@@ -29,7 +29,7 @@ Route::post('register', 'PassportController@register');
  * Login with Google
  */
 Route::get('redirect-google', 'PassportController@redirectToProviderGoogle');
-Route::get('callback-google', 'PassportController@handleProviderCallbackGoogle');
+Route::get('callback', 'PassportController@handleProviderCallbackGoogle');
 
 //User account actions
 Route::middleware('auth:api')->group(function () {

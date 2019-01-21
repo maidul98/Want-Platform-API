@@ -30,7 +30,6 @@ class PassportController extends Controller
             $request->last_name, $request->email, $request->password);
             return $register->register();
         }catch(Exception $e){
-            return $e;
             return response()->json(['error' => 'Something went wrong, please try again'], 400);
         }
     }
@@ -134,17 +133,22 @@ class PassportController extends Controller
             $token = $existingUser->createToken('login')->accessToken;
             return response()->json(['token' => $token], 200);
         } else {
-            $user = User::create([
-                'first_name' => $user->user['given_name'],
-                'last_name' => $user->user['family_name'],
-                'email' => $user->user['email'],
-                'password' => null,
-                'avatar' => $user->user['picture']
-            ]);
 
-            //return token to login the user
-            $token = $user->createToken('login')->accessToken;
-            return response()->json(['token' => $token], 200);
+            // $user = User::create([
+            //     'first_name' => $user->user['given_name'],
+            //     'last_name' => $user->user['family_name'],
+            //     'email' => $user->user['email'],
+            //     'password' => null,
+            //     'avatar' => $user->user['picture']
+            // ]);
+
+            // //return token to login the user
+            // $token = $user->createToken('login')->accessToken;
+            // return response()->json(['token' => $token], 200);
+
+            $register = new Register($user->user['given_name'], 
+            $user->user['family_name'], $user->user['email'], null);
+            return $register->register();
         }
     }
 
