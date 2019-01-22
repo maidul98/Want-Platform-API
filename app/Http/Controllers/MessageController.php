@@ -45,9 +45,9 @@ class MessageController extends Controller
 
         try{
             //check if user can send messages to this chat 
-            Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
-            orWhere('fulfiller_id', Auth::user()->id)->firstOrFail();
-            
+            // Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
+            // orWhere('fulfiller_id', Auth::user()->id)->firstOrFail();
+
             if($request->hasFile('attachment')){
                 $array = [];
                 foreach($request->file('attachment') as $file){
