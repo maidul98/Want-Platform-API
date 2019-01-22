@@ -129,23 +129,9 @@ class PassportController extends Controller
         // // check if they're an existing user
         $existingUser = User::where('email', $user->email)->first();
         if($existingUser){
-            //return token to login the user
             $token = $existingUser->createToken('login')->accessToken;
             return response()->json(['token' => $token], 200);
         } else {
-
-            // $user = User::create([
-            //     'first_name' => $user->user['given_name'],
-            //     'last_name' => $user->user['family_name'],
-            //     'email' => $user->user['email'],
-            //     'password' => null,
-            //     'avatar' => $user->user['picture']
-            // ]);
-
-            // //return token to login the user
-            // $token = $user->createToken('login')->accessToken;
-            // return response()->json(['token' => $token], 200);
-
             $register = new Register($user->user['given_name'], 
             $user->user['family_name'], $user->user['email'], null);
             $register->register();

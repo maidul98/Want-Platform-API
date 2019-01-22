@@ -43,12 +43,11 @@ class MessageController extends Controller
             'attachment.*' => 'image|mimes:jpeg,png,jpg,gif|max:6000'
         ]);
 
-        //check if user can send messages to this chat 
-        Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
-        orWhere('fulfiller_id', Auth::user()->id)->firstOrFail();
-
-
         try{
+            //check if user can send messages to this chat 
+            Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
+            orWhere('fulfiller_id', Auth::user()->id)->firstOrFail();
+            
             if($request->hasFile('attachment')){
                 $array = [];
                 foreach($request->file('attachment') as $file){
