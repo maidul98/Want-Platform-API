@@ -70,8 +70,10 @@ class MessageController extends Controller
                     Attachment::create(['message_id' => $message->id, 'media'=> $img]);
                 }
             }
-            
-            broadcast(new MessageSentEvent($message, $request->convo_id, Auth::user()))->toOthers();
+
+            $attachment = Attachment::where('message_id', $message->id)->get();
+
+            broadcast(new MessageSentEvent($message, $request->convo_id, Auth::user(), $attachment))->toOthers();
 
             return response()->json(['message'=> 'Your message has been sent'], 200);
 
