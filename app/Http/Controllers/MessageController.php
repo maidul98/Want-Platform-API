@@ -74,8 +74,6 @@ class MessageController extends Controller
             $attachment = Attachment::where('message_id', $message->id)->get();
 
             broadcast(new MessageSentEvent($message, $request->convo_id, Auth::user(), $attachment))->toOthers();
-
-            return $request->file('attachment');
             
             return response()->json(['message'=> 'Your message has been sent'], 200);
 
