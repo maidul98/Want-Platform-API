@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Exception;
 use Illuminate\Http\Request;
+use Validator;
 
 class SettingsController extends Controller
 {
@@ -27,7 +28,6 @@ class SettingsController extends Controller
                         'status' => 0,
                         'message' => "Your file size was too large, please try again with a smaller file size",
                     ]);
-
                 }
                 
                 //check if last avatar needs to be deleted
@@ -65,14 +65,23 @@ class SettingsController extends Controller
      * Update name, email, tag_line, description
      */
     public function updateNameEmailTagDes(Request $request){
-        try{
+        $this->validate($request,[
+            'first_name' => 'string',
+            'last_name' => 'string',
+            'email' => 'email',
+            'tag_line' => 'max:150',
+            'description' => 'max:250'
+        ]);
 
-            // return $this->updateName($request);
-            // return $this->changeEmail($request);
-            // $this->updateTag($request);
-            // $this->updateDescription($request);
+        try{
+            $this->updateName($request);
+            $this->changeEmail($request);
+            $this->updateTag($request);
+            $this->updateDescription($request);
+
+            return response()->json(['message' => 'Your profile has been updated'], 200);
         }catch(Exception $e){
-            return $e->getMessage();
+            return response()->json(['error' => 'Something went wrong, please try again'], 400);
         }
     }
 
@@ -82,62 +91,19 @@ class SettingsController extends Controller
      * Input: first_name, last_name
      */
     public function updateName(Request $request){
-        try{
-
-            // $request->validate([
-            //     'first_name' => 'between:1,50|string',
-            //     'last_name' => 'between:1,50|string'
-            // ]);
-            if(empty($request->first_name) && !empty($request->last_name)){
-                User::findOrFail(Auth::user()->id)->update(
-                    ['last_name'=>$request->last_name]
-                );
-
-                return response()->json(['message'=> 'last name updated'], 200);  
-
-            }elseif(empty($request->last_name) && !empty($request->first_name)){
-                User::findOrFail(Auth::user()->id)->update(
-                    ['first_name'=>$request->first_name]
-                );
-
-                return response()->json(['message'=> 'first name updated'], 200);  
-
-            }elseif(!empty($request->first_name) && !empty($request->last_name)){
-                User::findOrFail(Auth::user()->id)->update(
-                    ['first_name'=>$request->first_name, 'last_name'=>$request->last_name]
-                );
-
-                return response()->json(['message'=> 'First and last name updated'], 200);  
-
-            }else{
-                return;
-            }
-
-        }catch(Exception $e){
-            throw new Exception("Something went wrong, name has not been updated");
-        }
+        User::findOrFail(Auth::user()->id)->update(
+            ['last_name'=>$request->last_name, "first_name"=>$request->first_name]
+        );
     }
 
     /**
      * Change email for current user
-     * Input: new_email
+     * Input: email
      */
     public function changeEmail(Request $request){
-        try{
-        
-        if(empty($request->new_email)) return;
-
-        $request->validate([
-            'new_email' => 'email',
-        ]);
-
         User::findOrFail(Auth::user()->id)->update(
-                ['email'=>$request->new_email]
+            ['email'=>$request->email]
         );
-
-        }catch(Exception $e){
-            throw new Exception("Name is not changed");
-        }
     }
 
     /**
@@ -145,19 +111,9 @@ class SettingsController extends Controller
      * input:tag_line
      */
     public function updateTag(Request $request){
-        try{
-            if(empty($request->tag_line)) return;
-
-            $request->validate([
-                'tag_line' => 'max:50',
-            ]);
-
-            User::findOrFail(Auth::user()->id)->update(
-                    ['tag_line'=>$request->new_email]
-            );
-        }catch(Exception $e){
-            throw new Exception("Name is not changed");
-        }
+        User::findOrFail(Auth::user()->id)->update(
+            ['tag_line'=>$request->tag_line]
+        );
     }
 
 
@@ -166,19 +122,9 @@ class SettingsController extends Controller
      * input: description
      */
     public function updateDescription(Request $request){
-        try{
-            if(empty($request->description)) return;
-
-            $request->validate([
-                'description' => 'max:1000',
-            ]);
-
-            User::findOrFail(Auth::user()->id)->update(
-                    ['description'=>$request->description]
-            );
-        }catch(Exception $e){
-            throw new Exception("description not updated");
-        }
+        User::findOrFail(Auth::user()->id)->update(
+            ['description'=>$request->description]
+        );
     }
 
 

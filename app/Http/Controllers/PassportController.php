@@ -30,6 +30,7 @@ class PassportController extends Controller
             $request->last_name, $request->email, $request->password);
             return $register->register();
         }catch(Exception $e){
+            return $e->getMessage();
             return response()->json(['error' => 'Something went wrong, please try again'], 400);
         }
     }

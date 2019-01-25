@@ -62,7 +62,7 @@ class Register{
 
             $this->stripe_cus_id = $customer['id'];
 
-            $this->stripe_account = $stripeAccount;
+            return $stripeAccount['id'];
         }catch(Exception $e){
             return $e->getMessage();
         }

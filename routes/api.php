@@ -118,7 +118,7 @@ Route::get('test1', 'CategoryController@getSingle');
  * Settings
  */
 Route::middleware('auth:api')->group(function () {
-    Route::post('update_basic_profile', 'SettingsController@updateNameEmailTagDes');
+    Route::post('update_profile', 'SettingsController@updateNameEmailTagDes');
     Route::get('category/{id}', 'CategoryController@getSingle');
 });
 
