@@ -81,6 +81,7 @@ class SettingsController extends Controller
 
             return response()->json(['message' => 'Your profile has been updated'], 200);
         }catch(Exception $e){
+            return $e->getMessage();
             return response()->json(['error' => 'Something went wrong, please try again'], 400);
         }
     }
