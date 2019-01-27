@@ -16,10 +16,10 @@ class UserController extends Controller
      */
     public function profile($user){
         try{
-            $profile = User::where('id', $user)->with('rating')->first();
+            $profile = User::findOrFail($user)->with('reviews')->first();
             return $profile;
         }catch(Exception $e){
-
+            return $e->getMessage();
         }
     }
 
