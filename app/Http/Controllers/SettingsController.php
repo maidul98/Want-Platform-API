@@ -71,7 +71,6 @@ class SettingsController extends Controller
             'email' => 'email',
             'tag_line' => 'max:150',
             'description' => 'max:500'
-            
         ]);
 
         try{

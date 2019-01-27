@@ -19,7 +19,8 @@ class UserController extends Controller
      */
     public function profile($user){
         try{
-            $userInfo = User::findOrFail($user)->with('rating')->first();
+            // return $user;
+            $userInfo = User::where('id', $user)->with('rating')->get();
             $review  = Review::where('user_id', $user)->with('fulfiller')->simplePaginate(6);
             $total_fulfil = Want::where(['user_id' => $user, 'status' => 3])->count();
             $total_reviews = Review::where('user_id', $user)->count();
