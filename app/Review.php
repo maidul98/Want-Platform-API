@@ -17,4 +17,11 @@ class Review extends Model
         return $this->belongsTo(User::class, 'fulfiller_id');
     }
 
+    public function wanter(){
+        return $this->belongsTo(User::class, 'want_id');
+    }
+
+
+
+
 }
