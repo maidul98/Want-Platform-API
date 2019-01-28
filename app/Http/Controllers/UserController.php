@@ -21,9 +21,9 @@ class UserController extends Controller
         try{
             // return $user;
             $userInfo = User::where('id', $user)->with('rating')->get();
-            $review  = Review::where('user_id', $user)->with('fulfiller')->simplePaginate(6);
+            $review  = Review::where('fulfiller_id', $user)->with('user')->simplePaginate(6);
             $total_fulfil = Want::where(['user_id' => $user, 'status' => 3])->count();
-            $total_reviews = Review::where('user_id', $user)->count();
+            $total_reviews = Review::where('fulfiller_id', $user)->count();
             $json = ['user'=> $userInfo, 'review' => $review, 'stats' => ['total_fulfillment' => $total_fulfil, 'total_reviews'=> $total_reviews]];
             return $json;
         }catch(Exception $e){
