@@ -24,7 +24,7 @@ class UserController extends Controller
             $review  = Review::where('user_id', $user)->with('fulfiller')->simplePaginate(6);
             $total_fulfil = Want::where(['user_id' => $user, 'status' => 3])->count();
             $total_reviews = Review::where('user_id', $user)->count();
-            $json = ['user'=> $userInfo, 'review' => $review, 'stats' => ['total_fulfilment' => $total_fulfil, 'total_reviews'=> $total_reviews]];
+            $json = ['user'=> $userInfo, 'review' => $review, 'stats' => ['total_fulfillment' => $total_fulfil, 'total_reviews'=> $total_reviews]];
             return $json;
         }catch(Exception $e){
             return $e->getMessage();

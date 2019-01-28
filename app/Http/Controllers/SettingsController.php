@@ -69,8 +69,8 @@ class SettingsController extends Controller
             'first_name' => 'string',
             'last_name' => 'string',
             'email' => 'email',
-            'tag_line' => 'max:150',
-            'description' => 'max:500'
+            'tag_line' => 'max:50',
+            'description' => 'max:1000'
         ]);
 
         try{
