@@ -13,12 +13,25 @@ class Review extends Model
         return $this->belongsTo('App\User');
     }
 
+    /**
+     * Each review has a fulfiller
+     */
     public function fulfiller(){
         return $this->belongsTo(User::class, 'fulfiller_id');
     }
 
+    /**
+     * Each review has a wanter 
+     */
     public function wanter(){
         return $this->belongsTo(User::class, 'want_id');
+    }
+
+    /**
+     * Get the want this review is about 
+     */
+    public function want(){
+        return $this->belongsTo(Want::class, 'want_id');
     }
 
 

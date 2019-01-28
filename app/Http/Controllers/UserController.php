@@ -21,7 +21,13 @@ class UserController extends Controller
         try{
             // return $user;
             $userInfo = User::where('id', $user)->with('rating')->get();
-            $review  = Review::where('fulfiller_id', $user)->with('user')->simplePaginate(6);
+            // $review  = Review::where('fulfiller_id', $user)->with('user', 'want')->makeHidden('cost')->simplePaginate(6);
+            $review = Review::where('fulfiller_id', $user)->with(array('want' => function($query)
+{
+                $query->select('id', 'title', 'category_id');
+
+            }))->with('user')->simplePaginate(6);
+
             $total_fulfil = Want::where(['user_id' => $user, 'status' => 3])->count();
             $total_reviews = Review::where('fulfiller_id', $user)->count();
             $json = ['user'=> $userInfo, 'review' => $review, 'stats' => ['total_fulfillment' => $total_fulfil, 'total_reviews'=> $total_reviews]];
@@ -37,11 +43,4 @@ class UserController extends Controller
      public function getAvatar(){
          return Auth::user()->avatar;
      }
-
-     /**
-      * add tagline and profile details
-      */
-      public function addProfileDetails(){
-          
-      }
 }
