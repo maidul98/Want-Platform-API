@@ -71,7 +71,7 @@ Route::middleware('auth:api')->group(function () {
  * Conversations endpoints
  */
 Route::middleware('auth:api')->group(function () {
-    Route::get('convos', 'ConversationController@getConversations');
+    Route::get('conversations', 'ConversationController@getConversations');
 });
 
 

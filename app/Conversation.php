@@ -37,10 +37,17 @@ class Conversation extends Model
     }
 
     /**
-     * Each conversation has one fulfiller 
+     * Each conversation has attachment 
      */
     public function attachment(){
         return $this->belongsTo(Attachment::class, 'message_id');
+    }
+
+    /**
+     * Each conversation belongs to a Want
+     */
+    public function want(){
+        return $this->belongsTo(Want::class, 'want_id');
     }
     
 

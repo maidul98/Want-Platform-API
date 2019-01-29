@@ -19,9 +19,7 @@ class UserController extends Controller
      */
     public function profile($user){
         try{
-            // return $user;
             $userInfo = User::where('id', $user)->with('rating')->get();
-            // $review  = Review::where('fulfiller_id', $user)->with('user', 'want')->makeHidden('cost')->simplePaginate(6);
             $review = Review::where('fulfiller_id', $user)->with(array('want' => function($query)
 {
                 $query->select('id', 'title', 'category_id');

@@ -16,8 +16,16 @@ class ConversationController extends Controller
 
      public static function getConversations(){
          try{
-            return Conversation::where('wanter_id', Auth::user()->id)->
-            orWhere('fulfiller_id', Auth::user()->id)->get();
+            return Conversation::where(function ($query) {
+                $query->where('fulfiller_id', '=', Auth::user()->id)
+                      ->orWhere('wanter_id', '=', Auth::user()->id);
+            })->with('want', 'fulfiller', 'wanter')->get();
+
+            // where(function ($query) {
+            //     $query->where('fulfiller_id', '=', Auth::user()->id)
+            //           ->orWhere('wanter_id', '=', Auth::user()->id);
+            // })->get();
+
          }catch(Exception $e){
              return $e->getMessage();
          }

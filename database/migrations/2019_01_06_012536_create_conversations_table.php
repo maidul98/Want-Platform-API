@@ -17,6 +17,7 @@ class CreateConversationsTable extends Migration
             $table->increments('id');
             $table->integer('wanter_id');
             $table->integer('fulfiller_id');
+            $table->integer('want_id');
             $table->timestamps();
         });
     }
