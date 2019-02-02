@@ -1,15 +1,13 @@
 <?php 
 namespace App\Classes;
-use App\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Stripe as StripeTable;
+use Auth;
 use Exception;
-use App\Rating;
-use Hash;
-use Socialite;
+use App\Stripe;
+use App\Want;
+use Illuminate\Http\Request;
 use Validator;
-use Stripe\Stripe;
+use App\Rating;
+use App\User;
 
 class Register{
     public $first_name, $last_name, $email, $password;
@@ -19,6 +17,9 @@ class Register{
      * Init all the feilds needed for registering a user
      */
     public function __construct($first_name, $last_name, $email, $password = null){
+        //set stripe key 
+        \Stripe\Stripe::setApiKey(env("STRIPE_API_SECRET"));
+
         $this->first_name = $first_name;
         $this->last_name = $last_name;
         $this->email = $email;
@@ -47,7 +48,7 @@ class Register{
      */
     public function set_stripe(){
         try{
-            $stripeAccount = \Stripe::account()->create([
+            $stripeAccount = \Stripe\Account::create([
                 "country" => "US",
                 'email' => $this->email,
                 "type" => "custom",
@@ -62,7 +63,6 @@ class Register{
 
             $this->stripe_cus_id = $customer['id'];
 
-            return $stripeAccount['id'];
         }catch(Exception $e){
             return $e->getMessage();
         }
@@ -90,7 +90,7 @@ class Register{
      * Create record for stripe 
      */
     public function createStripeTable(){
-        $stripe = StripeTable::create([
+        $stripe = Stripe::create([
             'user_id' => $this->user->id,
             'account_id' => $this->stripe_account_id,
             'customer_id' => $this->stripe_cus_id,

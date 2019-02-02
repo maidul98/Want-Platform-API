@@ -4,12 +4,12 @@ use Auth;
 use Exception;
 use App\Stripe;
 use App\Want;
+use Illuminate\Http\Request;
 
 class Transaction{
-    public $stripe;
-
     function __construct(){
-        $this->stripe = Stripe::env("STRIPE_API_SECRET"); 
+        //set stripe key 
+        \Stripe\Stripe::setApiKey(env("STRIPE_API_SECRET"));
     }
 
 
@@ -28,7 +28,7 @@ class Transaction{
     /**
      * Pay a user give that the Want is complete 
      */
-    public function pay($amount, $toAccount, $cardId){
+    public function pay(Request $request){
         return $charge = \Stripe\Charge::create([
             "amount" => $amount,
             "currency" => "usd",
@@ -38,6 +38,6 @@ class Transaction{
               "amount" => $amount,
               "account" => $toAccount,
             ],
-          ]);
+        ]);
     }
 }

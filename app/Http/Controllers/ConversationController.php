@@ -21,11 +21,6 @@ class ConversationController extends Controller
                       ->orWhere('wanter_id', '=', Auth::user()->id);
             })->with('want', 'fulfiller', 'wanter')->get();
 
-            // where(function ($query) {
-            //     $query->where('fulfiller_id', '=', Auth::user()->id)
-            //           ->orWhere('wanter_id', '=', Auth::user()->id);
-            // })->get();
-
          }catch(Exception $e){
              return $e->getMessage();
          }

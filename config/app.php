@@ -126,7 +126,6 @@ return [
          */
         Illuminate\Auth\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
-        Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,

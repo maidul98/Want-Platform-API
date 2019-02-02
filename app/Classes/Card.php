@@ -8,28 +8,68 @@ use App\Want;
 use Illuminate\Http\Request;
 
 class Card{
-    public $customer_id;
-    public function __construct($user_id){
-        $this->customer_id =  Stripe::where('user_id')->customer_id;
+    public $customer_id, $stripe;
+    public function __construct(){
+        //set the stripe customer id 
+        $this->customer_id =  Stripe::where('user_id', Auth::user()->id)->firstOrFail()->customer_id;
+        
+        //set stripe key 
+        \Stripe\Stripe::setApiKey(env("STRIPE_API_SECRET")); 
     }
 
     /**
      * Takes in a request and return a token for that card.
      * Throws error if card has issues  
      * */
-    public function getCardToken(Request $request){
+    public function token(Request $request){
+
         try{
-            $token = $this->stripe->tokens()->create([
+            $token = \Stripe\Token::create([
                 'card' => [
-                'number' => $request->get('card_no'),
-                'exp_month' => $request->get('ccExpiryMonth'),
-                'exp_year' => $request->get('ccExpiryYear'),
-                'cvc' => $request->get('cvvNumber'),
+                    'number' => $request->get('card_no'),
+                    'exp_month' => $request->get('ccExpiryMonth'),
+                    'exp_year' => $request->get('ccExpiryYear'),
+                    'cvc' => $request->get('cvvNumber'),
                 ],
             ]);
-        }catch(\Cartalyst\Stripe\Exception\CardErrorException $e){
+        }catch(Exception $e){
             throw new Exception($e->getMessage());
         }
         return $token;
     }
+
+    /**
+     * Get all cards of user. Returns a list of cards
+     */
+    public function getCards(){
+        $cards = \Stripe\Customer::retrieve($this->customer_id)->sources->all();
+
+        return $cards;
+     }
+
+
+     /**
+     * Add a card to this customers account
+     */
+    public function addCard(Request $request){
+        $token = $this->token($request);
+        $customer = \Stripe\Customer::retrieve($this->customer_id);
+        $customer->sources->create(["source" => $token]);
+
+        return 'You have successfully added a new payment method';
+    }
+
+    /**
+     * Delete an existing card from customers account. 
+     * Returns true if deleted, others returns false 
+     */
+    public function removeCard(Request $request){
+        $customer = \Stripe\Customer::retrieve("cus_EPqSnNSEFkPrVV");
+        $customer->sources->retrieve($request->card_id)->delete();
+
+        return 'You have successfully removed a payment method';
+    }
+    
+
+    
 }

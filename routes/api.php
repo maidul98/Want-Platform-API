@@ -45,6 +45,7 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('auth:api')->group(function () {
     Route::post('/pay', ['uses' =>'WantController@CompleteWant']);
     Route::post('/addcard', ['uses' =>'PaymentController@addCard']);
+    Route::post('/token', ['uses' =>'PaymentController@test']);
 });
 
 
