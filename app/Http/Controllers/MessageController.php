@@ -23,8 +23,11 @@ class MessageController extends Controller
      */
     public function fetch(Request $request){
         try{
-            return Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
+            return Conversation::where(['wanter_id' => Auth::user()->id, 'id'=> $request->convo_id])->
             orWhere('fulfiller_id', Auth::user()->id)->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail();
+            
+            
+            $message =  Message::where(['conversation_id' => $request->convo_id, 'user_id' => Auth::user()->id])->latest()->get();
         }catch(Exception $e){
             return $e;
             return "Something went wrong";
