@@ -19,7 +19,7 @@ class ConversationController extends Controller
             return Conversation::where(function ($query) {
                 $query->where('fulfiller_id', '=', Auth::user()->id)
                       ->orWhere('wanter_id', '=', Auth::user()->id);
-            })->with('want', 'fulfiller', 'wanter')->get();
+            })->with('want', 'fulfiller', 'wanter')->orderBy('updated_at', 'desc')->get();
 
          }catch(Exception $e){
              return $e->getMessage();
