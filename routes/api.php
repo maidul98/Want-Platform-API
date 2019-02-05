@@ -40,14 +40,16 @@ Route::middleware('auth:api')->group(function () {
 
 
 /**
- * Payment endpoints
+ * Card endpoints
  */
 Route::middleware('auth:api')->group(function () {
-    Route::post('/pay', ['uses' =>'WantController@CompleteWant']);
     Route::post('/addcard', ['uses' =>'PaymentController@addCard']);
-    Route::post('/token', ['uses' =>'PaymentController@test']);
 });
 
+/**Payment endpoints */
+Route::middleware('auth:api')->group(function () {
+    Route::post('boo', ['uses' =>'PaymentController@payFulfiller']);
+});
 
 /**
  * Want endpoints
@@ -57,6 +59,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('want/{id}', 'WantController@update');
     Route::delete('want/{id}', 'WantController@destroy');
     Route::get('want/{id}', ['uses' =>'WantController@show']);
+    Route::post('accept', ['uses' => 'WantController@acceptWant']);
 });
 
 /**
@@ -114,7 +117,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('category', 'CategoryController@getAll');
     Route::get('category/{id}', 'CategoryController@getSingle');
 });
-Route::get('test1', 'CategoryController@getSingle');
 /**
  * Settings
  */

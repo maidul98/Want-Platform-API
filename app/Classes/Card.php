@@ -70,6 +70,4 @@ class Card{
         return 'You have successfully removed a payment method';
     }
     
-
-    
 }

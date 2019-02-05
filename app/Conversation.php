@@ -12,8 +12,10 @@ class Conversation extends Model
      * @var array
      */
     protected $hidden = [
-        'wanter_id', 'fulfiller_id', 'updated_at'
+        'wanter_id', 'fulfiller_id', 'updated_at',
     ];
+
+    protected $fillable = [ 'wanter_id', 'fulfiller_id', 'want_id'];
 
     /**
      * Each conversation has many messages

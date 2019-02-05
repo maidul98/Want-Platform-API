@@ -27,17 +27,22 @@ class Transaction{
 
     /**
      * Pay a user give that the Want is complete 
+     * Input: card_id, amout, toAccount
      */
     public function pay(Request $request){
-        return $charge = \Stripe\Charge::create([
-            "amount" => $amount,
+        $charge = \Stripe\Charge::create([
+            "amount" => $request->amount,
             "currency" => "usd",
             'customer' => Auth::user()->stripe->customer_id,
-            'card' => $cardId,
+            'card' => $request->card_id,
             "destination" => [
-              "amount" => $amount,
-              "account" => $toAccount,
+              "amount" => $request->amount,
+              "account" => $request->toAccount,
             ],
         ]);
+
+        return true;
     }
+
+
 }

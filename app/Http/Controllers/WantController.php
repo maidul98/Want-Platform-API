@@ -15,6 +15,7 @@ use App\User;
 use App\Stripe;
 use App\Transaction;
 use App\Payment;
+use App\Conversation;
 
 use Illuminate\Support\Facades\DB;
 
@@ -102,39 +103,25 @@ class WantController extends Controller
         }
     }
 
-
     /**
-     * Mark Want as complete.
-     *
+     * Accect the want: creates chat, add want to active wants
      */
-    public function CompleteWant(Pay $request)
-    {
+    public function acceptWant(Request $request){
         try{
+            if(Want::findOrFail($request->want_id)->status == 1){
+                //change status
+                // Want::findOrFail($request->want_id)->update(['status' => 2]);
 
-            $payment = new Payment();
-            $want = Want::findOrFail(1)->where('user_id', Auth::user()->id)->first();
-
-            if($want->status == 2){
-                $payment->pay($request->get('amount'), $request->get('to'), $request->get('card_id'));
-
-                $fulfiller_id = Stripe::findOrFail(Stripe::where('account_id', $request->get('to'))->first()->id)->user()->first();
-                $user_id = Auth::user()->id;
-                $want_id = $request->get('want_id');
-                $amount_paid = $request->get('amount'); 
+                //user of the want
+                $wantUser = Want::find($request->want_id)->user_id;
                 
-                Transaction::create($user_id, $want_id, $fulfiller_id->id, $amount_paid);
-
-                //update Want status
-                $want->status = 3;
-                $want->save();
-
-                return "All paid done, don't forget to rate"." ".$fulfiller_id->name;
-            }else{
-                return;
+                //add a conversation
+                Conversation::create(['wanter_id' => $wantUser, 'fulfiller_id' => Auth::user()->id, 'want_id' => $request->want_id]);
+                return 1;
             }
+        }catch(Excation $e){
 
-        }catch(Exception $e){
-            return "Something went wrong while trying to make payment. Please try again";
         }
     }
+
 }
