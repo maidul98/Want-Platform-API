@@ -28,15 +28,22 @@ class ConversationController extends Controller
 
      /**
       * Create a new converstion between these users or throw an error if something goes wrong
+      * Input: wanter_id, fulfiler_id
       */
-     public function createConversation($wanter_id, $fulfiler_id){
+     public function createConversation(Request $request){
         try{
-           $convo = new Conversation();
-            $convo->wanter_id = $wanter_id;
-            $convo->fulfiller_id = $fulfiler_id;
-            $convo->save();
+            if(!Conversation::where('wanter_id', Auth::user()->id)->orWhere('fulfiller_id')->exists()){
+                $convo = new Conversation();
+                $convo->wanter_id = $request->wanter_id;
+                $convo->fulfiller_id = $request->fulfiler_id;
+                $convo->want_id = $request->want_id;
+                $convo->save();
+            }else{
+                return 'convo not created';
+            }
         }catch(Exception $e){
-            throw new Exception('Could not create converstion'); 
+            return $e->getMessage();
+            return 'Could not create converstion';
         }
     }
 }

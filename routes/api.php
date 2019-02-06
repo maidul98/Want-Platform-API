@@ -76,6 +76,7 @@ Route::middleware('auth:api')->group(function () {
  */
 Route::middleware('auth:api')->group(function () {
     Route::get('conversations', 'ConversationController@getConversations');
+    Route::post('conversation', 'ConversationController@createConversation');
 });
 
 

@@ -20,14 +20,15 @@ class MessageController extends Controller
     /**
      * Get all messages in this convoersation. 
      * Current user has to be apart of this convo
+     * Input:convo_id
      */
     public function fetch(Request $request){
         try{
-            return Conversation::where(['wanter_id' => Auth::user()->id, 'id'=> $request->convo_id])->
-            orWhere('fulfiller_id', Auth::user()->id)->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail();
-;
+            // Check if user is in the chat
+            if(Conversation::findOrFail($request->convo_id)->wanter_id == Auth::user()->id || Conversation::findOrFail($request->id)->fulfiller_id == Auth::user()->id){
+                return Conversation::where(['id'=> $request->convo_id])->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail();
+            }
         }catch(Exception $e){
-            return $e;
             return "Something went wrong";
         }
 
