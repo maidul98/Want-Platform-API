@@ -25,7 +25,12 @@ class MessageController extends Controller
     public function fetch(Request $request){
         try{
             // Check if user is in the chat
-            if(Conversation::findOrFail($request->convo_id)->wanter_id == Auth::user()->id || Conversation::findOrFail($request->id)->fulfiller_id == Auth::user()->id){
+            $convo = Conversation::findOrFail($request->convo_id)->where(function ($query) {
+                $query->where('wanter_id', Auth::user()->id)
+                      ->orWhere('fulfiller_id', Auth::user()->id);
+            })->get();
+
+            if(!is_null($convo)){
                 return Conversation::where(['id'=> $request->convo_id])->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail();
             }
         }catch(Exception $e){
