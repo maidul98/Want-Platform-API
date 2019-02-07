@@ -29,6 +29,7 @@ class MessageController extends Controller
                 return Conversation::where(['id'=> $request->convo_id])->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail();
             }
         }catch(Exception $e){
+            return $e->getMessage();
             return "Something went wrong";
         }
 
