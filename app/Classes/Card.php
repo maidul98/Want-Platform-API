@@ -43,7 +43,6 @@ class Card{
      */
     public function getCards(){
         $cards = \Stripe\Customer::retrieve($this->customer_id)->sources->all();
-
         return $cards;
      }
 
@@ -55,19 +54,16 @@ class Card{
         $token = $this->token($request);
         $customer = \Stripe\Customer::retrieve($this->customer_id);
         $customer->sources->create(["source" => $token]);
-
-        return 'You have successfully added a new payment method';
     }
 
     /**
      * Delete an existing card from customers account. 
      * Returns true if deleted, others returns false 
+     * Input: card_id
      */
-    public function removeCard(Request $request){
-        $customer = \Stripe\Customer::retrieve("cus_EPqSnNSEFkPrVV");
+    public function remove(Request $request){
+        $customer = \Stripe\Customer::retrieve($this->customer_id);
         $customer->sources->retrieve($request->card_id)->delete();
-
-        return 'You have successfully removed a payment method';
     }
     
 }

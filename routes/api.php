@@ -43,7 +43,9 @@ Route::middleware('auth:api')->group(function () {
  * Card endpoints
  */
 Route::middleware('auth:api')->group(function () {
-    Route::post('/addcard', ['uses' =>'PaymentController@addCard']);
+    Route::post('card', ['uses' =>'CardsController@add']);
+    Route::delete('card', ['uses' =>'CardsController@remove']);
+    Route::get('card', ['uses' =>'CardsController@getAll']);
 });
 
 /**Payment endpoints */
