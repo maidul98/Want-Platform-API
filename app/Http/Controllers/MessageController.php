@@ -16,7 +16,6 @@ use App\Http\Controllers\ConversationController;
 use App\Events\MessageSentEvent;
 class MessageController extends Controller
 {
-
     /**
      * Get all messages in this convoersation. 
      * Current user has to be apart of this convo
@@ -28,10 +27,23 @@ class MessageController extends Controller
             $convo = Conversation::findOrFail($request->convo_id)->where(function ($query) {
                 $query->where('wanter_id', Auth::user()->id)
                       ->orWhere('fulfiller_id', Auth::user()->id);
-            })->get();
+            })->exists();
 
-            if(!is_null($convo)){
-                return Conversation::where(['id'=> $request->convo_id])->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail();
+            //Find out which user is the the other user 
+            $convo_info = Conversation::find($request->convo_id)->first();
+
+            if($convo_info->fulfiller_id != Auth::user()->id){
+               $other_user_id = $convo_info->fulfiller_id; 
+            }else{
+               $other_user_id = $convo_info->wanter_id;  
+            }
+
+            //count of unread messages 
+            $unread_count = Message::where(['conversation_id'=> $request->convo_id, 'user_id' => $other_user_id, 'seen' => 0])->count();
+
+            //if the user is in the convo 
+            if($convo){
+                return Conversation::where(['id'=> $request->convo_id])->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail()->setAttribute('unread_count', $unread_count);
             }
         }catch(Exception $e){
             return $e->getMessage();
@@ -39,7 +51,6 @@ class MessageController extends Controller
         }
 
     }
-
 
     /**
      * Send a message to the conversation id with a message.
@@ -79,10 +90,12 @@ class MessageController extends Controller
                 }
             }
 
+            //send attachments of this message
             $attachment = Attachment::where('message_id', $message->id)->get();
-
+            //send new message alert
             broadcast(new MessageSentEvent($message, $request->convo_id, Auth::user(), $attachment))->toOthers();
             
+            //update last message sent in the convo 
             Conversation::findOrFail($request->convo_id)->touch();
 
             return response()->json(['message'=> 'Your message has been sent'], 200);
@@ -91,6 +104,39 @@ class MessageController extends Controller
             return $e->getMessage();
             return response()->json(['error'=> 'Your message could not be sent for an unknown reason'], 400);  
         }
+    }
 
+    /**
+     * Mark all messages as read from the sender. The user has to be apart of this convo
+     * input: convo_id
+     */
+    public function seen(Request $request){
+        try{
+            //check user belongs in this convo 
+            $inConvo = Conversation::findOrFail($request->convo_id)->where(function ($query) {
+                $query->where('wanter_id', Auth::user()->id)
+                    ->orWhere('fulfiller_id', Auth::user()->id);
+            })->exists();
+
+            //find the other user
+            $convo_info = Conversation::find($request->convo_id);
+            if($convo_info->wanter_id != Auth::user()->id){
+                $other_user = $convo_info->wanter_id;
+            }else{
+                $other_user = $convo_info->fulfiller_id;
+            }
+            //check if the most recent message is read or not 
+            $mostRecentSeen = Message::where(['user_id' => 3, 'conversation_id'=> $request->convo_id])->first()->seen;
+
+            if(!$mostRecentSeen){
+                //Find other user 
+                if($inConvo){
+                    Message::where(['user_id' => $other_user, 'conversation_id'=> $request->convo_id])->update(['seen' => 1]); 
+                }
+            }
+        }catch(Exception $e){
+            return $e->getMessage();
+            return response()->json(['error'=> 'Your message could not be sent for an unknown reason'], 400);  
+        }
     }
 }

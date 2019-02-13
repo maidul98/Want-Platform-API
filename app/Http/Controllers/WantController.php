@@ -117,7 +117,6 @@ class WantController extends Controller
                 
                 //add a conversation
                 Conversation::create(['wanter_id' => $wantUser, 'fulfiller_id' => Auth::user()->id, 'want_id' => $request->want_id]);
-                return 1;
             }
         }catch(Excation $e){
 

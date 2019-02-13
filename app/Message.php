@@ -3,10 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Message extends Model
 {
-    protected $fillable = ['message', 'user_id'];
+    protected $fillable = ['message', 'user_id', 'seen'];
     
     /**
      * Each message belongs to one user 
@@ -27,6 +28,15 @@ class Message extends Model
      */
     public function attachments(){
         return $this->hasMany(Attachment::class, 'message_id');
+    }
+
+    public static function userInConvo($id, $user_id){
+        DB::table('users')->where('name', 'John')->first();
+        if($this->wanter_id == $user_id |$this->fulfiller_id == $user_id){
+            return true;
+        }
+        
+        return false;
     }
 
 }

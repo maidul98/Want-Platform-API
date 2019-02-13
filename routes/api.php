@@ -88,6 +88,7 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('auth:api')->group(function () {
     Route::post('get-message', 'MessageController@fetch');
     Route::post('send-message', 'MessageController@sendMessage');
+    Route::post('seen-message', 'MessageController@seen');
 });
 
 

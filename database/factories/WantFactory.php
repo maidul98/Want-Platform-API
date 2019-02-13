@@ -12,16 +12,14 @@ use Faker\Generator as Faker;
 | model instances for testing / seeding your application's database.
 |
 */
-
-$factory->define(App\User::class, function (Faker $faker) {
+$factory->define(App\Want::class, function (Faker $faker) {
     return [
-        'first_name' => $faker->firstName,
-        'last_name' => $faker->lastName,
-        'email' => $faker->unique()->safeEmail,
-        'password' => bcrypt("123456"), // secret
-        'username' => $faker->userName(),
-        'tag_line' => $faker->sentence($nbWords = 3, $variableNbWords = true),
+        'title' => $faker->sentence($nbWords = 6, $variableNbWords = true),
         'description' => $faker->paragraph(),
+        'user_id' => $faker->unique()->safeEmail,
+        'cost' => $faker->numberBetween(100,2000), // secret
+        'status' => 1,
+        'category_id' => $faker->numberBetween(1,3),
 
     ];
 });
