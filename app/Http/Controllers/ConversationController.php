@@ -2,24 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Message;
 use App\Conversation;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Http\Request;
 
 class ConversationController extends Controller
 {
     /**
      * Get all conversations the current user is in 
+     * Input: convo_id
      */
+     public static function getConversations(Request $request){
+        try{
+             //check user belongs in this convo 
+            $inConvo = Conversation::findOrFail($request->convo_id)->where(function ($query) {
+                $query->where('wanter_id', Auth::user()->id)
+                    ->orWhere('fulfiller_id', Auth::user()->id);
+            })->firstOrFail();
 
-     public static function getConversations(){
-         try{
+            // //find the other user
+            // $convo_info = Conversation::find($request->convo_id)->firstOrFail();
+            if($inConvo->wanter_id != Auth::user()->id){
+                $other_user_id = $inConvo->wanter_id;
+            }else{
+                $other_user_id = $inConvo->fulfiller_id;
+            }
+
+            // //count of unread messages 
+            $unread_count = Message::where(['conversation_id'=> $request->convo_id, 'user_id' => $other_user_id, 'seen' => 0])->count();
+            
             return Conversation::where(function ($query) {
                 $query->where('fulfiller_id', '=', Auth::user()->id)
                       ->orWhere('wanter_id', '=', Auth::user()->id);
-            })->with('want', 'fulfiller', 'wanter')->orderBy('updated_at', 'desc')->get();
+            })->with('want', 'fulfiller', 'wanter')->orderBy('updated_at', 'desc')->get()->push(['unread_count' => $unread_count]);
 
          }catch(Exception $e){
              return $e->getMessage();

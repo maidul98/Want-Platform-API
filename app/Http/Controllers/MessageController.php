@@ -38,12 +38,9 @@ class MessageController extends Controller
                $other_user_id = $convo_info->wanter_id;  
             }
 
-            //count of unread messages 
-            $unread_count = Message::where(['conversation_id'=> $request->convo_id, 'user_id' => $other_user_id, 'seen' => 0])->count();
-
             //if the user is in the convo 
             if($convo){
-                return Conversation::where(['id'=> $request->convo_id])->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail()->setAttribute('unread_count', $unread_count);
+                return Conversation::where(['id'=> $request->convo_id])->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail();
             }
         }catch(Exception $e){
             return $e->getMessage();
@@ -116,24 +113,16 @@ class MessageController extends Controller
             $inConvo = Conversation::findOrFail($request->convo_id)->where(function ($query) {
                 $query->where('wanter_id', Auth::user()->id)
                     ->orWhere('fulfiller_id', Auth::user()->id);
-            })->exists();
+            })->firstOrFail();
 
-            //find the other user
-            $convo_info = Conversation::find($request->convo_id);
-            if($convo_info->wanter_id != Auth::user()->id){
-                $other_user = $convo_info->wanter_id;
-            }else{
-                $other_user = $convo_info->fulfiller_id;
-            }
+            
             //check if the most recent message is read or not 
             $mostRecentSeen = Message::where(['user_id' => 3, 'conversation_id'=> $request->convo_id])->first()->seen;
 
             if(!$mostRecentSeen){
-                //Find other user 
-                if($inConvo){
-                    Message::where(['user_id' => $other_user, 'conversation_id'=> $request->convo_id])->update(['seen' => 1]); 
-                }
+                Message::where(['user_id' => $other_user, 'conversation_id'=> $request->convo_id])->update(['seen' => 1]); 
             }
+            
         }catch(Exception $e){
             return $e->getMessage();
             return response()->json(['error'=> 'Your message could not be sent for an unknown reason'], 400);  
