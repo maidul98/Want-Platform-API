@@ -79,6 +79,7 @@ Route::middleware('auth:api')->group(function () {
 Route::middleware('auth:api')->group(function () {
     Route::get('conversations', 'ConversationController@getConversations');
     Route::post('conversation', 'ConversationController@createConversation');
+    Route::get('unseen-convos', 'ConversationController@total_unseen_convo');
 });
 
 
