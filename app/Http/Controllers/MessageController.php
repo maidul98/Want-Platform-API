@@ -115,7 +115,7 @@ class MessageController extends Controller
                     ->orWhere('fulfiller_id', Auth::user()->id);
             })->firstOrFail();
 
-            $convo_info = Conversation::find($request->convo_id)->first();
+            $convo_info = Conversation::find($request->convo_id);
             
             // //find the other user
             if($convo_info->wanter_id != Auth::user()->id){
