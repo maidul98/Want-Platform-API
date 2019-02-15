@@ -122,7 +122,15 @@ class MessageController extends Controller
                 $other_user_id = $inConvo->fulfiller_id;
             }
             
-            Message::where(['user_id' => $other_user_id, 'conversation_id'=> $request->convo_id])->update(['seen' => 1]); 
+            return $other_user_id;
+
+            $update = Message::where(['user_id' => $other_user_id, 'conversation_id'=> $request->convo_id])->update(['seen' => 1]); 
+
+            if($update){
+                return 1;
+            }else{
+                return 2;
+            }
 
         }catch(Exception $e){
             return $e->getMessage();
