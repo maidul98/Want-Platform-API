@@ -114,22 +114,21 @@ class MessageController extends Controller
                 $query->where('wanter_id', Auth::user()->id)
                     ->orWhere('fulfiller_id', Auth::user()->id);
             })->firstOrFail();
+
+            $convo_info = Conversation::find($request->convo_id)->first();
             
             // //find the other user
-            if($inConvo->wanter_id != Auth::user()->id){
-                $other_user_id = $inConvo->wanter_id;
+            if($convo_info->wanter_id != Auth::user()->id){
+                $other_user_id = $convo_info->wanter_id;
             }else{
-                $other_user_id = $inConvo->fulfiller_id;
+                $other_user_id = $convo_info->fulfiller_id;
             }
+
+            //check if the most recent message is read or not 
+            $mostRecentSeen = Message::where(['user_id' => $other_user_id, 'conversation_id'=> $request->convo_id])->latest()->first()->seen;
             
-            return $other_user_id;
-
-            $update = Message::where(['user_id' => $other_user_id, 'conversation_id'=> $request->convo_id])->update(['seen' => 1]); 
-
-            if($update){
-                return 1;
-            }else{
-                return 2;
+            if(!$mostRecentSeen){
+                Message::where(['user_id' => $other_user_id, 'conversation_id'=> $request->convo_id])->update(['seen' => 1]); 
             }
 
         }catch(Exception $e){
