@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class Conversation extends Model
@@ -21,6 +21,10 @@ class Conversation extends Model
      * Each conversation has many messages
      */
     public function messages(){
+        return $this->hasMany('App\Message');
+    }
+
+    public function unseen(){
         return $this->hasMany('App\Message');
     }
 

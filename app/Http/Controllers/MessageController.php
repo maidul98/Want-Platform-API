@@ -122,7 +122,6 @@ class MessageController extends Controller
             if(!$mostRecentSeen){
                 Message::where(['user_id' => $other_user, 'conversation_id'=> $request->convo_id])->update(['seen' => 1]); 
             }
-            
         }catch(Exception $e){
             return $e->getMessage();
             return response()->json(['error'=> 'Your message could not be sent for an unknown reason'], 400);  
