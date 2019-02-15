@@ -40,7 +40,9 @@ class MessageController extends Controller
 
             //if the user is in the convo 
             if($convo){
-                return Conversation::where(['id'=> $request->convo_id])->with(['fulfiller', 'wanter', 'messages.attachments'])->latest()->firstOrFail();
+                return Conversation::where(['id'=> $request->convo_id])->with(['fulfiller', 'wanter'])->with(['messages.attachments', 'messages' => function ($query) {
+                    $query->latest();
+                }])->firstOrFail();
             }
         }catch(Exception $e){
             return $e->getMessage();
