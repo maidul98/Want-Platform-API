@@ -89,7 +89,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('get-message', 'MessageController@fetch');
     Route::post('send-message', 'MessageController@sendMessage');
     Route::post('seen-message', 'MessageController@seen');
-    Route::get('totalunread-message', 'MessageController@total_unread');
+    Route::get('total-unread-message', 'MessageController@total_unread');
 });
 
 
