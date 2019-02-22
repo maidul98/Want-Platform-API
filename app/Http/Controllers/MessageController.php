@@ -147,12 +147,13 @@ class MessageController extends Controller
             $all_count =  Conversation::where('wanter_id', Auth::user()->id)->orWhere('fulfiller_id', Auth::user()->id)->withCount(
                 ['unseen' => function ($query) {
                 $query->where('user_id', '!=', Auth::user()->id)->where('seen', '=', 0);
-            }])->first();
+            }])->get();
     
-            $total_count  =$all_count->sum('unseen_count');
+            $total_count  = $all_count->sum('unseen_count');
             
-            return response()->json(['unread_count'=> $total_count], 200);  
+            return response()->json(['unseen_count'=> $total_count], 200);  
         }catch(Exception $e){
+            return $e->getMessage();
             return "Something went wrong";
         }
     }
