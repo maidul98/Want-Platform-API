@@ -48,33 +48,4 @@ class ConversationController extends Controller
             return 'Could not create converstion';
         }
     }
-
-    /**
-     * Get the total number of unread convos 
-     */
-    public function total_unseen_convo(Request $request){
-        $total_unread_convo = 0;
-
-
-        Conversation::where(function ($query) {
-            $query->where('fulfiller_id', '=', Auth::user()->id)->orWhere('wanter_id', '=', Auth::user()->id);
-        })->withCount(
-            ['unseen' => function ($query) {
-            $query->where('user_id', '!=', Auth::user()->id)->where('seen', '=', 0);
-        }])->get();
-
-
-        return Conversation::where(function ($query) {
-            $query->where('fulfiller_id', '=', Auth::user()->id)->orWhere('wanter_id', '=', Auth::user()->id);
-        })->whereHas('messages', function($query) {
-            $query->where('name', 'like', '%physics%'); // constrains the classes table
-        })->get();
-        
-        // count(
-        //     ['unseen' => function ($query) {
-        //     $query->where('user_id', '!=', Auth::user()->id)->where('seen', '=', 0);
-        // }])->get();
-
-        return $total_unread_convo;
-    }
 }

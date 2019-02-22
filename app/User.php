@@ -84,9 +84,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Conversation');
     }
 
-    
-
-
-
+    /**
+     * Each user has many bookmarks
+     */
+    public function bookmarks(){
+        return $this->hasMany(Bookmark::class);
+    }
 
 }

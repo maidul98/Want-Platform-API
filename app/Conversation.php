@@ -56,6 +56,4 @@ class Conversation extends Model
         return $this->belongsTo(Want::class, 'want_id');
     }
     
-
-    
 }

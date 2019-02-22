@@ -14,6 +14,13 @@ class Want extends Model {
     }
 
     /**
+     * A want belongs to a bookmark
+     */
+    public function bookmark(){
+        return $this->belongsTo('App\Bookmark');
+    }
+
+    /**
      * Get the status of the Want 
      */
     public function getStatusAttribute($value)
