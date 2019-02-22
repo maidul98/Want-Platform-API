@@ -144,10 +144,10 @@ class MessageController extends Controller
      */
     public function total_unread(){
         try{
-            return $all_count =  Conversation::where('wanter_id', Auth::user()->id)->orWhere('fulfiller_id', Auth::user()->id)->withCount(
+            $all_count =  Conversation::where('wanter_id', Auth::user()->id)->orWhere('fulfiller_id', Auth::user()->id)->withCount(
                 ['unseen' => function ($query) {
                 $query->where('user_id', '!=', Auth::user()->id)->where('seen', '=', 0);
-            }])->get();
+            }])->first();
     
             $total_count  =$all_count->sum('unseen_count');
             
