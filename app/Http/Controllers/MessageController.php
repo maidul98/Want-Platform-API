@@ -140,7 +140,7 @@ class MessageController extends Controller
     }
 
     /**
-     * Total unread messages for this user and is convos
+     * Total unread messages for this user and its convos
      */
     public function total_unread(){
         try{

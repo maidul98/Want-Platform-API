@@ -80,7 +80,6 @@ class PassportController extends Controller
         
     }
 
-
     /**
      * Change password 
      * input: current-password, new-password
