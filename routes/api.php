@@ -64,7 +64,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('accept', ['uses' => 'WantController@acceptWant']);
 
-    Route::post('all', ['uses' => 'WantController@all']);
+    Route::get('all', ['uses' => 'WantController@all']);
 });
 
 /**
