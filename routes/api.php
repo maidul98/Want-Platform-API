@@ -61,7 +61,10 @@ Route::middleware('auth:api')->group(function () {
     Route::put('want/{id}', 'WantController@update');
     Route::delete('want/{id}', 'WantController@destroy');
     Route::get('want/{id}', ['uses' =>'WantController@show']);
+
     Route::post('accept', ['uses' => 'WantController@acceptWant']);
+
+    Route::post('all', ['uses' => 'WantController@all']);
 });
 
 /**
@@ -122,6 +125,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('category', 'CategoryController@getAll');
     Route::get('category/{id}', 'CategoryController@getSingle');
 });
+
 /**
  * Settings
  */
@@ -130,10 +134,16 @@ Route::middleware('auth:api')->group(function () {
     Route::get('category/{id}', 'CategoryController@getSingle');
 });
 
-Route::get('t', function(){
-    $x = new Register();
-    return $x->cat();
+
+/**
+ * Bookmarks
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('bookmark', 'BookmarkController@add');
+    Route::get('bookmarks', 'BookmarkController@all');
+    Route::delete('bookmark', 'BookmarkController@remove');
 });
+
 
 
 

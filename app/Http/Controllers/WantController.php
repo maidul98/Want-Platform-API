@@ -17,6 +17,8 @@ use App\Transaction;
 use App\Payment;
 use App\Conversation;
 
+use App\Notifications\Notifyfulfiller;
+
 use Illuminate\Support\Facades\DB;
 
 
@@ -105,22 +107,30 @@ class WantController extends Controller
 
     /**
      * Accect the want: creates chat, add want to active wants
+     * Input: want_id 
      */
     public function acceptWant(Request $request){
         try{
             if(Want::findOrFail($request->want_id)->status == 1){
-                //change status
-                // Want::findOrFail($request->want_id)->update(['status' => 2]);
+                //update want status
 
-                //user of the want
-                $wantUser = Want::find($request->want_id)->user_id;
+                //find want
+                $want = Want::findOrFail($request->want_id);
+                $wanter = User::findOrFail($want->user_id);
                 
-                //add a conversation
-                Conversation::create(['wanter_id' => $wantUser, 'fulfiller_id' => Auth::user()->id, 'want_id' => $request->want_id]);
+                //create a conversation
+                Conversation::create(['wanter_id' => $wanter->id, 'fulfiller_id' => Auth::user()->id, 'want_id' => $request->want_id]);
+
+                //notify the user that he has been accpetded
+                User::find(1)->notify(new Notifyfulfiller($wanter, Auth::user(), "Congrants! You have been chosen", $want));
             }
         }catch(Excation $e){
-
+            return $e->getMessage();
         }
+    }
+
+    public function all(){
+        return Want::all();
     }
     
 

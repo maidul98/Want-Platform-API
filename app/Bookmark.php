@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bookmark extends Model
 {
+    protected $fillable = [
+        'user_id', 'want_id'
+    ];
     /**
      * Each bookmark belongs to a want 
      */
@@ -17,6 +20,6 @@ class Bookmark extends Model
      * Each bookmark has many wants
      */
     public function bookmarks(){
-        return $this->hasMany('App\Want');
+        return $this->hasOne('App\Want');
     }
 }

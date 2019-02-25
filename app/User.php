@@ -9,7 +9,8 @@ use Laravel\Passport\HasApiTokens;
 use Laravel\Scout\Searchable;
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, Searchable;
+    use HasApiTokens, Notifiable;
+    use Searchable;
 
     /**
      * The attributes that are mass assignable.
