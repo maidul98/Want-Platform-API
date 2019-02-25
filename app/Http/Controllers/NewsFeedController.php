@@ -31,21 +31,18 @@ class NewsFeedController extends Controller
                  
                 //Makes sure such categories exist
                 Category::whereIn('id', $request->categories)->firstOrFail();
-                return Want::where(['status'=> 1])->with(['user', 'bookmark'])->
+                return Want::where(['status'=> 1])->with(['user'])->
 
                 whereIn('category_id', $request->categories)->orderBy($sort[0], $sort[1])->paginate(10);
 
             }elseif(in_array($request->sort_by, $filter['sort_by']) && $request->categories[0] == ""){
 
-                return Want::where(['status'=> 1])->with(['user', 'bookmark'])->orderBy($sort[0], $sort[1])->paginate(10);
+                return Want::where(['status'=> 1])->with(['user'])->orderBy($sort[0], $sort[1])->paginate(10);
 
             }elseif(empty($request->sort_by) && $request->categories[0] == ""){
-                return Want::where(['status'=> 1])->with('user')->with(array('bookmark' => function($query)
-                {
-                     $query->where('user_id', Auth::user()->id);
-                }))->orderBy('created_at', 'desc')->paginate(10);
+                return Want::where(['status'=> 1])->with('user')->orderBy('created_at', 'desc')->paginate(10);
             }else{
-                return Want::where(['status'=> 1])->with(['user', 'bookmark'])->
+                return Want::where(['status'=> 1])->with(['user'])->
                 whereIn('category_id', $request->categories)->orderBy('created_at', 'desc')->simplePaginate(10);
             }
 
