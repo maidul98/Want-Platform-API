@@ -20,7 +20,7 @@ class Want extends Model {
      * A want belongs to a bookmark
      */
     public function bookmark(){
-        return $this->belongsTo('App\Bookmark', 'want_id');
+        return $this->belongsTo('App\Bookmark', 'id', 'want_id');
     }
 
     /**
