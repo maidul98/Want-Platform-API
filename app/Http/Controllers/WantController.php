@@ -34,8 +34,6 @@ class WantController extends Controller
     public function store(StoreWant $request)
     {   
         try{
-//             $text_list = "[\"drugs are fun\",\"don't do drugs, stay in school\",\"lol you a fag son\",\"I have a throat infection\"]";
-// echo abuse_batch($text_list);
             $want = new Want;
             $want->title = $request->input("title");
             $want->user_id = Auth::id();

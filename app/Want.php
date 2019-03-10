@@ -3,6 +3,8 @@
 namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
+use App\User;
+use App\bookmark;
 
 class Want extends Model {
     use Searchable;
@@ -30,4 +32,22 @@ class Want extends Model {
     {
         return $value;
     }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray(){
+    $array = $this->toArray();
+
+    //find the user
+    $user = User::findOrFail($this->user)->first();
+    $bookmark = null;
+    $array['user'] = $user;
+    $array['bookmark'] = $bookmark;
+    return $array;
+    }
+
+
 }
