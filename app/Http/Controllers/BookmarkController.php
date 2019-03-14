@@ -16,9 +16,7 @@ class BookmarkController extends Controller
      */
     public function add(Request $request)
     {
-        return Bookmark::create(['user_id'=> Auth::user()->id, 'want_id' => $request->want_id]);
-
-        return Want::where('price', '>', 100)->searchable();
+        return Bookmark::firstOrCreate(['user_id'=> Auth::user()->id, 'want_id' => $request->want_id]);
     }
 
     /**

@@ -8,6 +8,8 @@ use App\Events\MessageSentEvent;
 
 use App\Classes\Register;
 
+use App\Want;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -145,15 +147,27 @@ Route::middleware('auth:api')->group(function () {
 });
 
 
+/**
+ * notifactions
+ */
+Route::middleware('auth:api')->group(function () {
+    
+});
+
+
 
 
 /**
  * Pusher auth.
  * If user belongs to the the chat then return a token.
  */
-Route::post('pusher-auth', function() {
-    $pusher = new Pusher\Pusher( env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), array('cluster' => env('PUSHER_APP_CLUSTER')));
-    if(Auth::user())
-    return $pusher->socket_auth(request()->channel_name, request()->socket_id);
-});
+// Route::post('pusher-auth', function() {
+//     $pusher = new Pusher\Pusher( env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), array('cluster' => env('PUSHER_APP_CLUSTER')));
+//     if(Auth::user())
+//     return $pusher->socket_auth(request()->channel_name, request()->socket_id);
+// });
 
+
+Route::get('/search', function (Request $request) {
+    return Want::search($request->search)->get();
+});
