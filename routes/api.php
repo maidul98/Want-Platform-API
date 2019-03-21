@@ -150,9 +150,9 @@ Route::middleware('auth:api')->group(function () {
 /**
  * notifactions
  */
-Route::middleware('auth:api')->group(function () {
+// Route::middleware('auth:api')->group(function () {
     
-});
+// });
 
 /**
  * Comments 
