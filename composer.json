@@ -17,10 +17,10 @@
         "laravel/scout": "^7.1",
         "laravel/socialite": "^4.0",
         "laravel/tinker": "^1.0",
-        "laravelista/comments": "^2.1",
         "league/flysystem-aws-s3-v3": "^1.0",
         "paralleldots/apis": "*",
         "pusher/pusher-php-server": "^3.2",
+        "staudenmeir/eloquent-eager-limit": "1.0",
         "stripe/stripe-php": "^6.27"
     },
     "require-dev": {

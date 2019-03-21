@@ -28,8 +28,5 @@ Broadcast::channel('chat.{convo_id}', function ($user, $convo_id) {
     return false;
 });
 
-//listen out for any convos that include you 
-
-
 
 

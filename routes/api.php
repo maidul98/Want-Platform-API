@@ -154,6 +154,14 @@ Route::middleware('auth:api')->group(function () {
     
 });
 
+/**
+ * Comments 
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('comment', 'CommentController@store');
+    Route::post('reply', 'CommentController@replyStore');
+});
+
 
 
 

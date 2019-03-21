@@ -11,6 +11,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
     use Searchable;
+    use \Staudenmeir\EloquentEagerLimit\HasEagerLimit; //limit the number of comments per want 
 
     /**
      * The attributes that are mass assignable.
@@ -92,5 +93,19 @@ class User extends Authenticatable
     public function bookmarks(){
         return $this->hasMany(Bookmark::class);
     }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray(){
+        $array = $this->toArray();
+    
+        //find the user
+        $user = User::findOrFail($this->user)->first();
+        $array['user'] = $user;
+        return $array;
+        }
 
 }

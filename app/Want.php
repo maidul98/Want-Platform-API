@@ -7,8 +7,9 @@ use App\User;
 use App\bookmark;
 
 class Want extends Model {
-    use Searchable;
-    
+    use Searchable; //enable search by algolia 
+    use \Staudenmeir\EloquentEagerLimit\HasEagerLimit; //limit the number of comments per want 
+
     protected $fillable = ['title', 'description', 'user_id', 'cost', 'status'];
 
     /**
@@ -47,6 +48,12 @@ class Want extends Model {
     $array['user'] = $user;
     $array['bookmark'] = $bookmark;
     return $array;
+    }
+
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
     }
 
 
