@@ -31,7 +31,7 @@ class NotifyMessageOwner extends Notification
      */
     public function via($notifiable)
     {
-        return ['broadcast'];
+        return ['broadcast', 'database'];
     }
 
     /**
@@ -41,6 +41,18 @@ class NotifyMessageOwner extends Notification
      * @return array
      */
     public function toArray($notifiable)
+    {
+        return [
+            'user'=> $this->user,
+            'message' => $this->message,
+        ];
+    }
+
+    /**
+     * Save the notifaction to the database
+     *
+     */
+    public function toDatabase($notifiable)
     {
         return [
             'user'=> $this->user,
