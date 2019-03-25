@@ -33,17 +33,17 @@ class NewsFeedController extends Controller
                 Category::whereIn('id', $request->categories)->firstOrFail();
                 return Want::where(['status'=> 1])->with(['user'])->
 
-                whereIn('category_id', $request->categories)->orderBy($sort[0], $sort[1])->with(array('comments' => function($query) { $query->with('replies.user')->latest()->limit(2)->with('user');}))->paginate(10);
+                whereIn('category_id', $request->categories)->orderBy($sort[0], $sort[1])->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
 
             }elseif(in_array($request->sort_by, $filter['sort_by']) && $request->categories[0] == ""){
 
-                return Want::where(['status'=> 1])->with(['user'])->orderBy($sort[0], $sort[1])->with(array('comments' => function($query) { $query->with('replies.user')->latest()->limit(2)->with('user');}))->paginate(10);
+                return Want::where(['status'=> 1])->with(['user'])->orderBy($sort[0], $sort[1])->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
 
             }elseif(empty($request->sort_by) && $request->categories[0] == ""){
-                return Want::where(['status'=> 1])->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->latest()->limit(2)->with('user');}))->paginate(10);
+                return Want::where(['status'=> 1])->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
             }else{
                 return Want::where(['status'=> 1])->with(['user'])->
-                whereIn('category_id', $request->categories)->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->latest()->limit(2)->with('user');}))->simplePaginate(10);
+                whereIn('category_id', $request->categories)->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->simplePaginate(10);
             }
 
          }catch(Exception $e){

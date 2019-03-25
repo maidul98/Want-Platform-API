@@ -9,11 +9,11 @@ use Exception;
 use Image;
 use Illuminate\Support\Facades\Storage;
 use App\Attachment;
-
-
 use App\Http\Controllers\ConversationController;
-
 use App\Events\MessageSentEvent;
+use App\Notifications\NotifyMessageOwner;
+use App\User;
+
 class MessageController extends Controller
 {
     /**
@@ -62,10 +62,6 @@ class MessageController extends Controller
         ]);
 
         try{
-            //check if user can send messages to this chat 
-            // Conversation::findOrFail($request->convo_id)->where('wanter_id', Auth::user()->id)->
-            // orWhere('fulfiller_id', Auth::user()->id)->firstOrFail();
-
             if($request->hasFile('attachment')){
                 $array = [];
                 foreach($request->file('attachment') as $file){
@@ -91,8 +87,20 @@ class MessageController extends Controller
 
             //send attachments of this message
             $attachment = Attachment::where('message_id', $message->id)->get();
+            
             //send new message alert
             broadcast(new MessageSentEvent($message, $request->convo_id, Auth::user(), $attachment))->toOthers();
+
+            //find out who the other user so we can send them a notifcation
+            $convo = Conversation::findOrFail($request->convo_id);
+            if($convo->wanter_id == Auth::user()->id){
+                $other_user = $convo->fulfiller_id;
+            }else{
+                $other_user = $convo->wanter_id;
+            }
+
+            //notify the other user that he has been sent a message 
+            User::findOrFail($other_user)->notify(new NotifyMessageOwner(Auth::user(), $request->message));
             
             //update last message sent in the convo 
             Conversation::findOrFail($request->convo_id)->touch();

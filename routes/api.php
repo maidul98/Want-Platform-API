@@ -150,9 +150,10 @@ Route::middleware('auth:api')->group(function () {
 /**
  * notifactions
  */
-// Route::middleware('auth:api')->group(function () {
-    
-// });
+Route::middleware('auth:api')->group(function () {
+    Route::get('notifiactions', 'NotifiactionController@get_all_unread');
+    Route::post('mark-notifiactions-read', 'NotifiactionController@markAsRead');
+});
 
 /**
  * Comments 

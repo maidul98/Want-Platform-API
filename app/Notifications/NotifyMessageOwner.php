@@ -10,15 +10,17 @@ use Illuminate\Notifications\Messages\MailMessage;
 class NotifyMessageOwner extends Notification
 {
     use Queueable;
-
+    public $user, $message;
     /**
      * Create a new notification instance.
-     *
+     * $user is the person who sent the message
+     * $message is the message that was sent to this user
      * @return void
      */
-    public function __construct()
+    public function __construct($user, $message)
     {
-        //
+        $this->user = $user;
+        $this->message = $message;
     }
 
     /**
@@ -29,21 +31,7 @@ class NotifyMessageOwner extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toDatabase($notifiable)
-    {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        return ['broadcast'];
     }
 
     /**
@@ -55,7 +43,8 @@ class NotifyMessageOwner extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'user'=> $this->user,
+            'message' => $this->message,
         ];
     }
 }

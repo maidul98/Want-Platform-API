@@ -58,8 +58,7 @@ class WantController extends Controller
     public function show($id)
     {
         try{
-            $want = Want::findOrFail($id);
-            $want->user;
+            $want = Want::where('id', $id)->with(array('bookmark' => function($query){ $query->where('user_id', Auth::user()->id); }))->with(array('comments' => function($query) { $query->with('replies.user')->with('user');}))->first();
             return response()->json(['want' => $want]);
         }catch(Exception $e){
             return response()->json(['error'=> 'Something went wrong, please try again'], 400);  
