@@ -180,3 +180,11 @@ Route::middleware('auth:api')->group(function () {
 Route::get('/search', function (Request $request) {
     return Want::search($request->search)->get();
 });
+
+Route::group([      
+    'prefix' => 'password'
+], function () {    
+    Route::post('create', 'PasswordResetController@create');
+    Route::get('find/{token}', 'PasswordResetController@find');
+    Route::post('reset', 'PasswordResetController@reset');
+});

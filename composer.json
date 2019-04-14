@@ -21,7 +21,8 @@
         "paralleldots/apis": "*",
         "pusher/pusher-php-server": "^3.2",
         "staudenmeir/eloquent-eager-limit": "1.0",
-        "stripe/stripe-php": "^6.27"
+        "stripe/stripe-php": "^6.27",
+        "nesbot/carbon": "^2.16.3"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
