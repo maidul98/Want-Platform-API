@@ -72,13 +72,8 @@ class PasswordResetController extends Controller
 
     /**
      * Reset password
-     *
-     * @param  [string] email
-     * @param  [string] password
-     * @param  [string] password_confirmation
-     * @param  [string] token
+     *Input: email, password, token
      * @return [string] message
-     * @return [json] user object
      */
     public function reset(Request $request){
         $request->validate([
