@@ -35,4 +35,12 @@ class CommentController extends Controller
         $post = Want::find($request->get('want_id'));
         $post->comments()->save($reply);
     }
+
+    /**
+     * Delete a comment owned by this user or delete any comment if the user is the owner of this post 
+     * Input: want_id, comment_id
+     */
+    public function deleteComment($comment_id, $want_id){
+        $want = Want::find($want_id)->findOrFail();
+    }
 }

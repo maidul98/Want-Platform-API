@@ -34,7 +34,7 @@ return [
         'redirect'      => env('GOOGLE_REDIRECT')
     ],
     'firebase' => [
-        'key' => 'AIzaSyCMlbH6yb6vYM8BJKwDBkZzb5k099oyzPw'
+        'key' => env("FIREBASE_KEY")
     ],
     
 

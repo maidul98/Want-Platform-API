@@ -10,18 +10,18 @@ use Illuminate\Notifications\Messages\MailMessage;
 class NotifyMessageOwner extends Notification
 {
     use Queueable;
-    public $user, $message;
+    public $user, $message, $device_tokens;
     /**
      * Create a new notification instance.
      * $user is the person who sent the message
      * $message is the message that was sent to this user
      * @return void
      */
-    public function __construct($user, $message)
-    {
+    public function __construct($user, $message){
         $this->user = $user;
         $this->message = $message;
-    }
+        $this->device_tokens = $device_tokens;
+    }   
 
     /**
      * Get the notification's delivery channels.
@@ -61,21 +61,31 @@ class NotifyMessageOwner extends Notification
     }
 
     /**
+     * Get the broadcastable representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return BroadcastMessage
+     */
+    public function toBroadcast($notifiable){
+        return new BroadcastMessage([
+            'user'=> $this->user,
+            'message' => $this->message,
+        ]);
+    }
+
+    /**
      * Send notifaction to firebase
      */
     public function toFirebase($notifiable){
-        // return (new \Liliom\Firebase\FirebaseMessage)
-        //     ->notification([
-        //         'title' => 'Notification title',
-        //         'body' => 'Notification body',
-        //         'sound' => '', // Optional
-        //     'icon' => '', // Optional
-        //     'click_action' => '' // Optional
-        //     ])
-        //     ->setData([
-        //     'param' => 'zxy' // Optional
-        // ])->setPriority('high'); // Default is 'normal'
-        return;
+        return (new \Liliom\Firebase\FirebaseMessage)
+            ->notification([
+                'title' => 'Notification title',
+                'body' => 'Notification body',
+                'sound' => '', // Optional
+            'icon' => '', // Optional
+            'click_action' => '' // Optional
+            ])
+            ->setPriority('high'); // Default is 'normal'
     }
 
     /**
@@ -85,8 +95,9 @@ class NotifyMessageOwner extends Notification
      */
     public function routeNotificationForFirebase()
     {
-        return $this->device_tokens;
+        return $this->user->device_token;
     }
+
 
 
 }
