@@ -30,8 +30,7 @@ class NotifyMessageOwner extends Notification
      */
     public function via($notifiable)
     {
-        return ['broadcast', 'database'];
-        //firebase
+        return ['broadcast', 'database', 'firebase'];
     }
 
     /**
@@ -67,37 +66,36 @@ class NotifyMessageOwner extends Notification
      * @return BroadcastMessage
      */
     public function toBroadcast($notifiable){
-        // return new BroadcastMessage([
-        //     'user'=> $this->user,
-        //     'message' => $this->message,
-        // ]);
-        return;
+        return new BroadcastMessage([
+            'user'=> $this->user,
+            'message' => $this->message,
+        ]);
     }
 
-    // /**
-    //  * Send notifaction to firebase
-    //  */
-    // public function toFirebase($notifiable){
-    //     return (new \Liliom\Firebase\FirebaseMessage)
-    //         ->notification([
-    //             'title' => 'Notification title',
-    //             'body' => 'Notification body',
-    //             'sound' => '', // Optional
-    //         'icon' => '', // Optional
-    //         'click_action' => '' // Optional
-    //         ])
-    //         ->setPriority('high'); // Default is 'normal'
-    // }
+    /**
+     * Send notifaction to firebase
+     */
+    public function toFirebase($notifiable){
+        return (new \Liliom\Firebase\FirebaseMessage)
+            ->notification([
+                'title' => 'Notification title',
+                'body' => 'Notification body',
+                'sound' => '', // Optional
+            'icon' => '', // Optional
+            'click_action' => '' // Optional
+            ])
+            ->setPriority('high'); // Default is 'normal'
+    }
 
-    // /**
-    //  * Send the firebase notifaction to this users device
-    //  *
-    //  * @return string|array
-    //  */
-    // public function routeNotificationForFirebase()
-    // {
-    //     return $this->user->device_token;
-    // }
+    /**
+     * Send the firebase notifaction to this users device
+     *
+     * @return string|array
+     */
+    public function routeNotificationForFirebase()
+    {
+        return $this->user->device_token;
+    }
 
 
 
