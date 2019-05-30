@@ -30,7 +30,7 @@ class NotifyMessageOwner extends Notification
      */
     public function via($notifiable)
     {
-        return ['broadcast', 'database', 'firebase'];
+        return ['broadcast', 'database'];
     }
 
     /**
