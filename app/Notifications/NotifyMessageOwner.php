@@ -10,7 +10,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 class NotifyMessageOwner extends Notification
 {
     use Queueable;
-    public $user, $message, $device_tokens;
+    public $user, $message;
     /**
      * Create a new notification instance.
      * $user is the person who sent the message
@@ -20,7 +20,6 @@ class NotifyMessageOwner extends Notification
     public function __construct($user, $message){
         $this->user = $user;
         $this->message = $message;
-        $this->device_tokens = $device_tokens;
     }   
 
     /**
@@ -73,30 +72,30 @@ class NotifyMessageOwner extends Notification
         ]);
     }
 
-    /**
-     * Send notifaction to firebase
-     */
-    public function toFirebase($notifiable){
-        return (new \Liliom\Firebase\FirebaseMessage)
-            ->notification([
-                'title' => 'Notification title',
-                'body' => 'Notification body',
-                'sound' => '', // Optional
-            'icon' => '', // Optional
-            'click_action' => '' // Optional
-            ])
-            ->setPriority('high'); // Default is 'normal'
-    }
+    // /**
+    //  * Send notifaction to firebase
+    //  */
+    // public function toFirebase($notifiable){
+    //     return (new \Liliom\Firebase\FirebaseMessage)
+    //         ->notification([
+    //             'title' => 'Notification title',
+    //             'body' => 'Notification body',
+    //             'sound' => '', // Optional
+    //         'icon' => '', // Optional
+    //         'click_action' => '' // Optional
+    //         ])
+    //         ->setPriority('high'); // Default is 'normal'
+    // }
 
-    /**
-     * Send the firebase notifaction to this users device
-     *
-     * @return string|array
-     */
-    public function routeNotificationForFirebase()
-    {
-        return $this->user->device_token;
-    }
+    // /**
+    //  * Send the firebase notifaction to this users device
+    //  *
+    //  * @return string|array
+    //  */
+    // public function routeNotificationForFirebase()
+    // {
+    //     return $this->user->device_token;
+    // }
 
 
 
