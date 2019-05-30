@@ -151,8 +151,8 @@ Route::middleware('auth:api')->group(function () {
  * notifactions
  */
 Route::middleware('auth:api')->group(function () {
-    Route::get('notifiactions', 'NotifiactionController@get_all_unread');
-    Route::post('mark-notifiactions-read', 'NotifiactionController@markAsRead');
+    Route::get('notifiactions', 'NotificactionController@get_all_unread');
+    Route::post('mark-notifiactions-read', 'NotificactionController@markAsRead');
 });
 
 /**
@@ -163,28 +163,25 @@ Route::middleware('auth:api')->group(function () {
     Route::post('reply', 'CommentController@replyStore');
 });
 
-
-
-
-/**
- * Pusher auth.
- * If user belongs to the the chat then return a token.
- */
-// Route::post('pusher-auth', function() {
-//     $pusher = new Pusher\Pusher( env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'), array('cluster' => env('PUSHER_APP_CLUSTER')));
-//     if(Auth::user())
-//     return $pusher->socket_auth(request()->channel_name, request()->socket_id);
-// });
-
-
 Route::get('/search', function (Request $request) {
     return Want::search($request->search)->get();
 });
 
+
+/**Password reset routes */
 Route::group([      
-    'prefix' => 'password'
+    'prefix' => 'password-reset'
 ], function () {    
     Route::post('create', 'PasswordResetController@create');
     Route::get('find/{token}', 'PasswordResetController@find');
     Route::post('reset', 'PasswordResetController@reset');
+});
+
+/**
+ * Mobile API
+ */
+
+ /**Add or update mobile device token */
+Route::middleware('auth:api')->group(function () {
+    Route::post('device-token', 'DeviceTokenController@addOrUpdateToken');
 });

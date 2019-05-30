@@ -20,6 +20,7 @@ class PassportController extends Controller
      * Handles Registration Request.
      * Create user, set Stripe details,
      * Create empty rating for user
+     * If all is well, gets a login token, otherwise gets message
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -30,7 +31,7 @@ class PassportController extends Controller
             $request->last_name, $request->email, $request->password);
             return $register->register();
         }catch(Exception $e){
-            return $e->getMessage();
+            // return $e;
             return response()->json(['error' => 'Something went wrong, please try again'], 400);
         }
     }

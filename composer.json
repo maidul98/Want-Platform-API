@@ -18,11 +18,12 @@
         "laravel/socialite": "^4.0",
         "laravel/tinker": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "liliom/laravel-firebase": "^1.0",
+        "nesbot/carbon": "1.32.0 as 1.25",
         "paralleldots/apis": "*",
         "pusher/pusher-php-server": "^3.2",
         "staudenmeir/eloquent-eager-limit": "1.0",
-        "stripe/stripe-php": "^6.27",
-        "nesbot/carbon": "^2.16.3"
+        "stripe/stripe-php": "^6.27"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

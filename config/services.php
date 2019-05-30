@@ -33,6 +33,9 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect'      => env('GOOGLE_REDIRECT')
     ],
+    'firebase' => [
+        'key' => 'AIzaSyCMlbH6yb6vYM8BJKwDBkZzb5k099oyzPw'
+    ],
     
 
 ];

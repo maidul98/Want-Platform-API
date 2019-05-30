@@ -23,14 +23,13 @@ class Payment extends Model
       }
 
     /**
-     * From current your, pay another user.
-     * If all is well, does nothing. Throw Exception otherwise
+     * From current user, pay another user.
+     * If all is well, does nothing. Throw Exception otherwise.
      */
     public function pay($amount, $toAccount, $cardId){
 
         try{
-            \Stripe\Stripe::setApiKey("sk_test_7DFayyE5PlPHvjyRAv07KC9p");
-
+            // \Stripe\Stripe::setApiKey("sk_test_7DFayyE5PlPHvjyRAv07KC9p");
             return $charge = \Stripe\Charge::create([
                 "amount" => $amount,
                 "currency" => "usd",

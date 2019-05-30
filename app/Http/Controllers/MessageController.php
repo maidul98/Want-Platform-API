@@ -91,7 +91,7 @@ class MessageController extends Controller
             //send new message alert
             broadcast(new MessageSentEvent($message, $request->convo_id, Auth::user(), $attachment))->toOthers();
 
-            //find out who the other user so we can send them a notifcation
+            //find out who the other user so we can send them a notifcation too
             $convo = Conversation::findOrFail($request->convo_id);
             if($convo->wanter_id == Auth::user()->id){
                 $other_user = $convo->fulfiller_id;
@@ -99,7 +99,7 @@ class MessageController extends Controller
                 $other_user = $convo->wanter_id;
             }
 
-            //notify the other user that he has been sent a message 
+            //notify the other user that this user has been sent a message 
             User::findOrFail($other_user)->notify(new NotifyMessageOwner(Auth::user(), $request->message));
             
             //update last message sent in the convo 

@@ -94,18 +94,18 @@ class User extends Authenticatable
         return $this->hasMany(Bookmark::class);
     }
 
-    /**
-     * Get the indexable data array for the model.
-     *
-     * @return array
-     */
-    public function toSearchableArray(){
-        $array = $this->toArray();
+    // /**
+    //  * Get the indexable data array for the model.
+    //  *
+    //  * @return array
+    //  */
+    // public function toSearchableArray(){
+    //     $array = $this->toArray();
     
-        //find the user
-        $user = User::findOrFail($this->user)->first();
-        $array['user'] = $user;
-        return $array;
-        }
+    //     //find the user
+    //     $user = User::findOrFail($this->user)->first();
+    //     $array['user'] = $user;
+    //     return $array;
+    // }
 
 }

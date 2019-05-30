@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
-class NotifiactionController extends Controller
+class NotificactionController extends Controller
 {
     /**Get all the unread messages for this user */
     public function get_all_unread(){

@@ -31,7 +31,7 @@ class NotifyMessageOwner extends Notification
      */
     public function via($notifiable)
     {
-        return ['broadcast', 'database'];
+        return ['broadcast', 'database', 'firebase'];
     }
 
     /**
@@ -59,4 +59,34 @@ class NotifyMessageOwner extends Notification
             'message' => $this->message,
         ];
     }
+
+    /**
+     * Send notifaction to firebase
+     */
+    public function toFirebase($notifiable){
+        // return (new \Liliom\Firebase\FirebaseMessage)
+        //     ->notification([
+        //         'title' => 'Notification title',
+        //         'body' => 'Notification body',
+        //         'sound' => '', // Optional
+        //     'icon' => '', // Optional
+        //     'click_action' => '' // Optional
+        //     ])
+        //     ->setData([
+        //     'param' => 'zxy' // Optional
+        // ])->setPriority('high'); // Default is 'normal'
+        return;
+    }
+
+    /**
+     * Send the firebase notifaction to this users device
+     *
+     * @return string|array
+     */
+    public function routeNotificationForFirebase()
+    {
+        return $this->device_tokens;
+    }
+
+
 }

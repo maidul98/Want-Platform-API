@@ -6,6 +6,7 @@ use App\Stripe;
 use App\Want;
 use Illuminate\Http\Request;
 use Validator;
+use Illuminate\Support\Facades\DB;
 use App\Rating;
 use App\User;
 
@@ -38,8 +39,13 @@ class Register{
             'email' => $this->email,
             'password' => bcrypt($this->password)
         ]);
-        
-        $this->user = $user;
+
+        // set user if created 
+        if($user){
+            $this->user = $user;
+        }
+
+        $this->user = $user->id;
     }
 
     /**
@@ -48,34 +54,29 @@ class Register{
      */
     public function set_stripe(){
         try{
+            //make stripe account for user 
             $stripeAccount = \Stripe\Account::create([
                 "country" => "US",
                 'email' => $this->email,
                 "type" => "custom",
             ]);
 
+            //set id 
             $this->stripe_account_id = $stripeAccount['id'];
-    
+
+            // make stripe customer account for receiving payments 
             $customer = \Stripe\Customer::create([
                 "email" => $this->email,
                 ]
             );
 
+            //set customer id 
             $this->stripe_cus_id = $customer['id'];
 
         }catch(Exception $e){
-            return $e->getMessage();
+            // return $e->getMessage();
+            return 'something is wrong with stripe';
         }
-    }
-
-    /**
-     * Accpect stripe toc
-     */
-    public function acceptStripe(){
-        $stripeAccount = \Stripe\Account::retrieve($this->stripe_account_id);
-        $stripeAccount->tos_acceptance->date = time();
-        $stripeAccount->tos_acceptance->ip = $_SERVER['REMOTE_ADDR'];
-        $stripeAccount->save();
     }
 
     /**
@@ -87,7 +88,7 @@ class Register{
     }
 
     /**
-     * Create record for stripe 
+     * Create record for stripe and accpet the TOC of stripe
      */
     public function createStripeTable(){
         $stripe = Stripe::create([
@@ -95,6 +96,11 @@ class Register{
             'account_id' => $this->stripe_account_id,
             'customer_id' => $this->stripe_cus_id,
         ]);
+
+        $stripeAccount = \Stripe\Account::retrieve($this->stripe_account_id);
+        $stripeAccount->tos_acceptance->date = time();
+        $stripeAccount->tos_acceptance->ip = $_SERVER['REMOTE_ADDR'];
+        $stripeAccount->save();
     }
 
     /**
@@ -112,13 +118,17 @@ class Register{
      * register the user 
      */
     public function register(){
-        $this->create_user();
-        $this->set_stripe();
-        $this->createStripeTable();
-        $this->acceptStripe();
-        $this->createRatings();
-        return $this->token();
+        DB::beginTransaction();
+        try{
+            $this->create_user();
+            $this->set_stripe();
+            $this->createStripeTable();
+            $this->createRatings();
+            return $this->token();
+        }catch(Exception $e){
+            DB::rollback();
+            return "Something went wrong, please try again later!";
+        }
     }
-
 
 }
