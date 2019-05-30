@@ -31,6 +31,7 @@ class NotifyMessageOwner extends Notification
     public function via($notifiable)
     {
         return ['broadcast', 'database'];
+        //firebase
     }
 
     /**
@@ -66,10 +67,11 @@ class NotifyMessageOwner extends Notification
      * @return BroadcastMessage
      */
     public function toBroadcast($notifiable){
-        return new BroadcastMessage([
-            'user'=> $this->user,
-            'message' => $this->message,
-        ]);
+        // return new BroadcastMessage([
+        //     'user'=> $this->user,
+        //     'message' => $this->message,
+        // ]);
+        return;
     }
 
     // /**

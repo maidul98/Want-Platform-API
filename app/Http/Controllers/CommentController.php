@@ -42,5 +42,6 @@ class CommentController extends Controller
      */
     public function deleteComment($comment_id, $want_id){
         $want = Want::find($want_id)->findOrFail();
+        
     }
 }
