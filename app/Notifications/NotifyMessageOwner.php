@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Notifications;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -83,8 +84,7 @@ class NotifyMessageOwner extends Notification
                 'sound' => '', // Optional
             'icon' => '', // Optional
             'click_action' => '' // Optional
-            ])
-            ->setPriority('high'); // Default is 'normal'
+            ])->setPriority('high'); // Default is 'normal'
     }
 
     /**
@@ -94,7 +94,7 @@ class NotifyMessageOwner extends Notification
      */
     public function routeNotificationForFirebase()
     {
-        return $this->user->device_token;
+        return ['fYuuanS_YK4:APA91bEsFBKF3cUXotoxvOv2S9kyss9V3ONQZUuDq8cBvm57AuXdJn6SB3sY5JMpe0lLJUPk4D7c8bWTtPLRkwykJNtnazNMmBbo8eoU8mctiTZXf5XvN_lA_h7Mf9o2AUg9gMBgfmKG'];
     }
 
 

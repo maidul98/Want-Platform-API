@@ -9,6 +9,7 @@ use App\Events\MessageSentEvent;
 use App\Classes\Register;
 
 use App\Want;
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -184,4 +185,10 @@ Route::group([
  /**Add or update mobile device token */
 Route::middleware('auth:api')->group(function () {
     Route::post('device-token', 'DeviceTokenController@addOrUpdateToken');
+});
+
+use App\Notifications\NotifyMessageOwner;
+Route::get('/cast', function (Request $request) {
+    User::find(1)->notify(new NotifyMessageOwner(  User::find(2), $request->message)  );
+            
 });
