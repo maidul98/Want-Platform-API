@@ -12,6 +12,7 @@ class NotifyMessageOwner extends Notification
 {
     use Queueable;
     public $user, $message;
+    public $verb = "sent you a message:";
     /**
      * Create a new notification instance.
      * $user is the person who sent the message
@@ -45,6 +46,7 @@ class NotifyMessageOwner extends Notification
         return [
             'user'=> $this->user,
             'message' => $this->message,
+            'verb' => $this->verb
         ];
     }
 
@@ -57,6 +59,7 @@ class NotifyMessageOwner extends Notification
         return [
             'user'=> $this->user,
             'message' => $this->message,
+            'verb' => $this->verb
         ];
     }
 
@@ -70,6 +73,7 @@ class NotifyMessageOwner extends Notification
         return new BroadcastMessage([
             'user'=> $this->user,
             'message' => $this->message,
+            'verb' => $this->verb
         ]);
     }
 
@@ -86,17 +90,5 @@ class NotifyMessageOwner extends Notification
             'click_action' => '' // Optional
             ])->setPriority('high'); // Default is 'normal'
     }
-
-    /**
-     * Send the firebase notifaction to this users device
-     *
-     * @return string|array
-     */
-    public function routeNotificationForFirebase()
-    {
-        return ['fYuuanS_YK4:APA91bEsFBKF3cUXotoxvOv2S9kyss9V3ONQZUuDq8cBvm57AuXdJn6SB3sY5JMpe0lLJUPk4D7c8bWTtPLRkwykJNtnazNMmBbo8eoU8mctiTZXf5XvN_lA_h7Mf9o2AUg9gMBgfmKG'];
-    }
-
-
 
 }
