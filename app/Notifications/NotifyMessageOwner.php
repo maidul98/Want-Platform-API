@@ -70,11 +70,18 @@ class NotifyMessageOwner extends Notification
      * @return BroadcastMessage
      */
     public function toBroadcast($notifiable){
-        return new BroadcastMessage([
+        return new BroadcastMessage(
+            // [
+            // 'user'=> $this->user,
+            // 'message' => $this->message,
+            // 'verb' => $this->verb
+            // ]
+            ['data'=>[
             'user'=> $this->user,
             'message' => $this->message,
             'verb' => $this->verb
-        ]);
+            ]]
+        );
     }
 
     /**
