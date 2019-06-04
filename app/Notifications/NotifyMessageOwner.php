@@ -76,7 +76,7 @@ class NotifyMessageOwner extends Notification
             // 'message' => $this->message,
             // 'verb' => $this->verb
             // ]
-            ['data'=>[
+            [[
             'user'=> $this->user,
             'message' => $this->message,
             'verb' => $this->verb
