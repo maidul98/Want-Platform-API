@@ -25,24 +25,5 @@ class Transaction{
         $transaction->save();
     }
 
-    /**
-     * Pay a user give that the Want is complete 
-     * Input: card_id, amout, toAccount
-     */
-    public function pay(Request $request){
-        $charge = \Stripe\Charge::create([
-            "amount" => $request->amount,
-            "currency" => "usd",
-            'customer' => Auth::user()->stripe->customer_id,
-            'card' => $request->card_id,
-            "destination" => [
-              "amount" => $request->amount,
-              "account" => $request->toAccount,
-            ],
-        ]);
-
-        return true;
-    }
-
 
 }

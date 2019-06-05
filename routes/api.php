@@ -187,8 +187,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('device-token', 'DeviceTokenController@addOrUpdateToken');
 });
 
-use App\Notifications\NotifyMessageOwner;
-Route::get('/cast', function (Request $request) {
-    User::find(1)->notify(new NotifyMessageOwner(  User::find(2), $request->message)  );
-            
+use App\Classes\Payment;
+
+Route::get('/pay', function (Request $request) {
+    $payment = new Payment();      
 });
+
