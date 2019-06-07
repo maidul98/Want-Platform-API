@@ -187,9 +187,12 @@ Route::middleware('auth:api')->group(function () {
     Route::post('device-token', 'DeviceTokenController@addOrUpdateToken');
 });
 
-use App\Classes\Payment;
 
-Route::get('/pay', function (Request $request) {
-    $payment = new Payment();      
+Route::get('/ml', function (Request $request) {
+    $user = User::find(1);
+    // Prepare the request for recombee server, we need 10 recommended items for a given user.
+    $recommendations = Laracombee::recommendTo($user, 10)->wait();
+    return $recommendations->recomms;
 });
+
 

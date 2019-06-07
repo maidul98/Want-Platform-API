@@ -9,6 +9,9 @@ use Laravel\Passport\HasApiTokens;
 use Laravel\Scout\Searchable;
 class User extends Authenticatable
 {
+    //recommendations 
+    public static $laracombee = ['first_name' => 'string', 'last_name'=> 'string', 'tag_line' => 'string', 'description'=> 'string', ''];
+
     use HasApiTokens, Notifiable;
     use Searchable;
     use \Staudenmeir\EloquentEagerLimit\HasEagerLimit; //limit the number of comments per want 

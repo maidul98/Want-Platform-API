@@ -7,6 +7,9 @@ use App\User;
 use App\bookmark;
 
 class Want extends Model {
+    //recommendations 
+    public static $laracombee = ['title' => 'string', 'description'=> 'string', 'cost' => 'double', 'category_id'=> 'int', 'created_at'=> 'timestamp', 'user_id'=>'int'];
+    
     use Searchable; //enable search by algolia 
     use \Staudenmeir\EloquentEagerLimit\HasEagerLimit; //limit the number of comments per want 
 
