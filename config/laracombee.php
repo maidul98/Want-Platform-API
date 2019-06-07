@@ -11,9 +11,10 @@ return [
     |
     */
 
-    'database' => 'want-dev',
-    'token'    => 'ybLDNUGwkP3fI8t4ueU4LkGwaYTSO6CLMKY6OpZtueFaTwpeiPSUpmbnToz1VcCI',
+    // 'token'    => 'ybLDNUGwkP3fI8t4ueU4LkGwaYTSO6CLMKY6OpZtueFaTwpeiPSUpmbnToz1VcCI',
 
+    'database' => env('RECOMBEE_DATABASE_NAME'),
+    'token'    => env('RECOMBEE_TOKEN'),
     /*
     |--------------------------------------------------------------------------
     | Recombee Timeout.
