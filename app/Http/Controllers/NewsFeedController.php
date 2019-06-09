@@ -52,9 +52,10 @@ class NewsFeedController extends Controller
                 foreach($reccs as $x){
                     array_push($recommended_ids, $x['id']);
                 }
+                return $recommended_ids;
 
                 //get array of ids
-                return Want::findMany($recommended_ids)->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
+                // return Want::findMany($recommended_ids)->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
             }else{
                 return Want::where(['status'=> 1])->with(['user'])->
                 whereIn('category_id', $request->categories)->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->simplePaginate(10);
