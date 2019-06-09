@@ -20,6 +20,9 @@ class CommentController extends Controller
         $post = Want::find($request->get('want_id'));
         $post->comments()->save($comment);
 
+        //send new message alert
+        broadcast(new NotifyPostOwnerOfComment($message, $request->convo_id, Auth::user(), $attachment))->toOthers();
+
     }
 
     /**

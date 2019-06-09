@@ -149,12 +149,12 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Amranidev\Laracombee\Providers\LaracombeeServiceProvider::class,
 
         /*
          * Package Service Providers...
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Amranidev\Laracombee\Providers\LaracombeeServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -178,7 +178,6 @@ return [
     */
 
     'aliases' => [
-
         'App' => Illuminate\Support\Facades\App::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
