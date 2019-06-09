@@ -154,7 +154,7 @@ return [
          * Package Service Providers...
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
-        // Amranidev\Laracombee\Providers\LaracombeeServiceProvider::class,
+        Amranidev\Laracombee\Providers\LaracombeeServiceProvider::class,
         /*
          * Application Service Providers...
          */
