@@ -40,7 +40,21 @@ class NewsFeedController extends Controller
                 return Want::where(['status'=> 1])->with(['user'])->orderBy($sort[0], $sort[1])->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
 
             }elseif(empty($request->sort_by) && $request->categories[0] == ""){
-                return Want::where(['status'=> 1])->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
+
+                // return Want::where(['status'=> 1])->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
+
+                $user = User::find(1);
+                // Prepare the request for recombee server, we need 10 recommended items for a given user.
+                $recommendations = Laracombee::recommendTo(Auth::user(), 10)->wait();
+                $recc_id = $recommendations['recommId'];
+                $reccs = $recommendations['recomms'];
+                $recommended_ids = [];
+                foreach($reccs as $x){
+                    array_push($recommended_ids, $x['id']);
+                }
+
+                //get array of ids
+                return Want::findMany($recommended_ids)->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
             }else{
                 return Want::where(['status'=> 1])->with(['user'])->
                 whereIn('category_id', $request->categories)->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->simplePaginate(10);
