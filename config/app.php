@@ -154,7 +154,7 @@ return [
          * Package Service Providers...
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
-        Amranidev\Laracombee\Providers\LaracombeeServiceProvider::class,
+        // Amranidev\Laracombee\Providers\LaracombeeServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -214,7 +214,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Laracombee' => Amranidev\Laracombee\facades\LaracombeeFacade::class,
+        'Laracombee' => Amranidev\Laracombee\facades\aracombeeFacade::class,
     ],
 
 ];
