@@ -29,10 +29,9 @@ class PassportController extends Controller
         try{
             $register = new Register($request->first_name, 
             $request->last_name, $request->email, $request->password);
-            return $register->register();
+            return $register->create_user();
         }catch(Exception $e){
-            // return $e;
-            return response()->json(['error' => 'Something went wrong, please try again'], 400);
+            return $e->getMessage();
         }
     }
  

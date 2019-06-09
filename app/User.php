@@ -10,7 +10,12 @@ use Laravel\Scout\Searchable;
 class User extends Authenticatable
 {
     //recommendations 
-    public static $laracombee = ['first_name' => 'string', 'last_name'=> 'string', 'tag_line' => 'string', 'description'=> 'string'];
+    public static $laracombee = [
+    'first_name' => 'string',
+    'last_name' => 'string',
+    'tag_line' => 'string',
+    'description'=> 'string'
+    ];
 
     use HasApiTokens, Notifiable;
     use Searchable;

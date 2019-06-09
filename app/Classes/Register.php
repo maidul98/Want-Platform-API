@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use App\Rating;
 use App\User;
 
+use Laracombee;
+
 class Register{
     public $first_name, $last_name, $email, $password;
     public $stripe_account_id, $stripe_cus_id, $user;
@@ -32,20 +34,36 @@ class Register{
      * Create the new user and saves it to a feild var
      * Throws error if something goes wrong 
      */
-    public function create_user(){    
-        $user = User::create([
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'password' => bcrypt($this->password)
-        ]);
-
-        // set user if created 
-        if($user){
+    public function create_user(){ 
+        DB::beginTransaction();
+        try{
+            $user = User::create([
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
+                'email' => $this->email,
+                'password' => bcrypt($this->password)
+            ]);
+    
+            //save the user 
             $this->user = $user;
-        }
+    
+            //make user on Recombee
+            $this->createUserOnRecombee();
+    
+            //make user on Stripe
+            $this->set_stripe();
+    
+            //give the user a rating 
+            $this->createRatings();
+    
+            // return user token on successful registration
+            return $this->token();
+        }catch(Exception $e){
+            DB::rollback();
 
-        $this->user = $user->id;
+            return $e->getMessage();
+            // throw new Exception('Something went wrong, please try again');
+        }   
     }
 
     /**
@@ -53,30 +71,27 @@ class Register{
      * Throws error if accounts are not created
      */
     public function set_stripe(){
-        try{
-            //make stripe account for user 
-            $stripeAccount = \Stripe\Account::create([
-                "country" => "US",
-                'email' => $this->email,
-                "type" => "custom",
-            ]);
+        //make stripe account for user 
+        $stripeAccount = \Stripe\Account::create([
+            "country" => "US",
+            'email' => $this->email,
+            "type" => "custom",
+        ]);
 
-            //set id 
-            $this->stripe_account_id = $stripeAccount['id'];
+        //set id 
+        $this->stripe_account_id = $stripeAccount['id'];
 
-            // make stripe customer account for receiving payments 
-            $customer = \Stripe\Customer::create([
-                "email" => $this->email,
-                ]
-            );
+        // make stripe customer account for receiving payments 
+        $customer = \Stripe\Customer::create([
+            "email" => $this->email,
+            ]
+        );
 
-            //set customer id 
-            $this->stripe_cus_id = $customer['id'];
+        //set customer id 
+        $this->stripe_cus_id = $customer['id'];
 
-        }catch(Exception $e){
-            // return $e->getMessage();
-            return 'something is wrong with stripe';
-        }
+        //save stripe customer/account deltails to DB
+        $this->createStripeTable();
     }
 
     /**
@@ -115,20 +130,17 @@ class Register{
     }
 
     /**
-     * register the user 
+     * Add this user to Recombee database
      */
-    public function register(){
-        DB::beginTransaction();
-        try{
-            $this->create_user();
-            $this->set_stripe();
-            $this->createStripeTable();
-            $this->createRatings();
-            return $this->token();
-        }catch(Exception $e){
-            DB::rollback();
-            return "Something went wrong, please try again later!";
-        }
-    }
+    public function createUserOnRecombee(){
+        $user = User::findOrFail($this->user->id);
 
+        $addUser = Laracombee::addUser($user);
+
+        Laracombee::send($addUser)->then(function () {
+        // Success.
+        })->otherWise(function ($error) {
+        // Handle Exeption.
+        })->wait();
+    }
 }
