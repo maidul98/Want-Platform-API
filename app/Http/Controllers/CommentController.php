@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Want;
 use App\Comment;
+use App\Notifications\NotifyPostOwnerOfComment;
 
 class CommentController extends Controller
 {
@@ -21,7 +22,8 @@ class CommentController extends Controller
         $post->comments()->save($comment);
 
         //send new message alert
-        broadcast(new NotifyPostOwnerOfComment($message, $request->convo_id, Auth::user(), $attachment))->toOthers();
+        //notify the other user that this user has been sent a message 
+        User::findOrFail($post->user_id)->notify(new NotifyPostOwnerOfComment(Auth::user(), $request->get('comment_body') ));
 
     }
 
@@ -37,6 +39,7 @@ class CommentController extends Controller
         $reply->parent_id = $request->get('comment_id');
         $post = Want::find($request->get('want_id'));
         $post->comments()->save($reply);
+        User::findOrFail($post->user_id)->notify(new NotifyPostOwnerOfComment(Auth::user(), $request->get('comment_body') ));
     }
 
     /**

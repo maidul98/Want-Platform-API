@@ -55,6 +55,7 @@ class CardsController extends Controller
             return $e->getMessage();
         }
     }
+    
 
     /**
      * Get all cards of user. Returns a list of cards
