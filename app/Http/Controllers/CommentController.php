@@ -23,7 +23,7 @@ class CommentController extends Controller
 
         //send new message alert
         //notify the other user that this user has been sent a message 
-        User::findOrFail($post->user_id)->notify(new NotifyPostOwnerOfComment(Auth::user(), $request->get('comment_body') ));
+        User::findOrFail(1)->notify(new NotifyPostOwnerOfComment(Auth::user(), $request->get('comment_body') ));
 
     }
 
@@ -39,7 +39,8 @@ class CommentController extends Controller
         $reply->parent_id = $request->get('comment_id');
         $post = Want::find($request->get('want_id'));
         $post->comments()->save($reply);
-        User::findOrFail($post->user_id)->notify(new NotifyPostOwnerOfComment(Auth::user(), $request->get('comment_body') ));
+        
+        User::findOrFail(1)->notify(new NotifyPostOwnerOfComment(Auth::user(), $request->get('comment_body') ));
     }
 
     /**
