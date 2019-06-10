@@ -46,7 +46,7 @@ class NewsFeedController extends Controller
                 $recommendations = Laracombee::recommendTo(Auth::user(), 10, [ //optional parameters:
                     'filter' => "'user_id' != ".Auth::user()->id."",
                     'diversity'=> '.35',
-                    'rotationRate'=> '0.3'
+                    'rotationRate'=> '1'
                   ])->wait();
                 $recc_id = $recommendations['recommId'];
                 $reccs = $recommendations['recomms'];
