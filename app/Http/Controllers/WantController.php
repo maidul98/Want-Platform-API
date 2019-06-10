@@ -17,6 +17,7 @@ use App\Transaction;
 use App\Payment;
 use App\Conversation;
 
+use Laracombee;
 use App\Notifications\Notifyfulfiller;
 
 use Illuminate\Support\Facades\DB;
@@ -42,6 +43,9 @@ class WantController extends Controller
             $want->status = 1;
             $want->category_id = $request->input("category");
             $want->save();
+
+            //add to recombe 
+            Laracombee::addItem($want);
             
             return response()->json(['data' =>$want, 'message'=> 'Your want has been posted'], 200);
 
