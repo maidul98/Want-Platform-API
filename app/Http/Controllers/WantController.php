@@ -45,9 +45,7 @@ class WantController extends Controller
             $want->save();
 
             //add to recombe 
-
             $addWant = Laracombee::addItem($want);
-            
             Laracombee::send($addWant)->then(function () {
               // Success.
             })->otherWise(function ($error) {
