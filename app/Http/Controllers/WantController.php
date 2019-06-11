@@ -45,7 +45,14 @@ class WantController extends Controller
             $want->save();
 
             //add to recombe 
-            Laracombee::addItem($want);
+
+            $addWant = Laracombee::addItem($want);
+            
+            Laracombee::send($addWant)->then(function () {
+              // Success.
+            })->otherWise(function ($error) {
+              // Handle Exeption.
+            })->wait();
             
             return response()->json(['data' =>$want, 'message'=> 'Your want has been posted'], 200);
 
