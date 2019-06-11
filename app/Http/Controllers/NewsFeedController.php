@@ -47,7 +47,7 @@ class NewsFeedController extends Controller
                     'filter' => "'user_id' != ".Auth::user()->id."",
                     // 'diversity'=> '1',
                     // 'rotationRate'=> '1',
-                    'logic' => 'recombee:personal'
+                    // 'logic' => 'recombee:personal'
                   ])->wait();
                 $recc_id = $recommendations['recommId'];
                 $reccs = $recommendations['recomms'];
