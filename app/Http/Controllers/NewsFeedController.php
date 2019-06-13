@@ -44,7 +44,7 @@ class NewsFeedController extends Controller
                 // Prepare the request for recombee server, we need 10 recommended items for a given user.
                 $recommendations = Laracombee::recommendTo(Auth::user(), 100, [ //optional parameters:
                     'filter' => "'user_id' != ".Auth::user()->id."",
-                    'diversity'=> '.25',
+                    // 'diversity'=> '.25',
                     // 'rotationRate'=> '1',
                     'logic' => 'recombee:personal'
                   ])->wait();
