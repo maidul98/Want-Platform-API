@@ -8,7 +8,14 @@ use Illuminate\Support\Facades\DB;
 class Message extends Model
 {
     protected $fillable = ['message', 'user_id', 'seen'];
-    
+
+    /**
+     * All of the relationships to be touched.
+     *
+     * @var array
+     */
+    protected $touches = ['conversation'];
+
     /**
      * Each message belongs to one user 
      */
