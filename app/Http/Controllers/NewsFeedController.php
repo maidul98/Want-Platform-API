@@ -41,11 +41,10 @@ class NewsFeedController extends Controller
                 return Want::where(['status'=> 1])->with(['user'])->orderBy($sort[0], $sort[1])->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
 
             }elseif(empty($request->sort_by) && $request->categories[0] == ""){
-                $user = User::find(1);
                 // Prepare the request for recombee server, we need 10 recommended items for a given user.
-                $recommendations = Laracombee::recommendTo(Auth::user(), 50, [ //optional parameters:
+                $recommendations = Laracombee::recommendTo(Auth::user(), 100, [ //optional parameters:
                     'filter' => "'user_id' != ".Auth::user()->id."",
-                    // 'diversity'=> '1',
+                    'diversity'=> '.25',
                     // 'rotationRate'=> '1',
                     'logic' => 'recombee:personal'
                   ])->wait();

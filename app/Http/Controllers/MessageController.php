@@ -101,9 +101,6 @@ class MessageController extends Controller
 
             //notify the other user that this user has been sent a message 
             User::findOrFail($other_user)->notify(new NotifyMessageOwner(Auth::user(), $request->message));
-            
-            // //update last message sent in the convo 
-            // Conversation::findOrFail($request->convo_id)->touch();
 
             return response()->json(['message'=> 'Your message has been sent'], 200);
 
