@@ -21,7 +21,7 @@ class SettingsController extends Controller
             if($request->hasFile('avatar')){
                 $avatar = $request->file('avatar');
 
-                $resized_img = Image::make($avatar)->crop(300, 300);
+                $resized_img = Image::make($avatar)->fit(300);
                 
                 if($resized_img ->filesize() > 5000000 ){
                     return response()->json([
