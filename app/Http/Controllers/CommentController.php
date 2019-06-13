@@ -40,7 +40,7 @@ class CommentController extends Controller
         $post = Want::find($request->get('want_id'));
         $post->comments()->save($reply);
         
-        User::findOrFail($post->user_id)->notify(new NotifyPostOwnerOfComment(Auth::user(), $request->get('comment_body') ));
+        User::findOrFail($post->user_id)->notify(new NotifyPostOwnerOfComment(Auth::user(), $request->get('comment_body')));
     }
 
     /**
