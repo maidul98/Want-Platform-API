@@ -51,12 +51,16 @@ class NewsFeedController extends Controller
                 $recc_id = $recommendations['recommId'];
                 $reccs = $recommendations['recomms'];
                 $recommended_ids = [];
+                
                 foreach($reccs as $x){
                     array_push($recommended_ids, $x['id']);
                 }
+                $custom = collect(['recc_id' => $recc_id]);
+                $newsfeedItems = Want::whereIn('id', $recommended_ids)->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
 
-                return Want::whereIn('id', $recommended_ids)->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
-
+                //merge custom item 
+                $data = $custom->merge($newsfeedItems);
+                return $data;
                 // return Want::where(['status'=> 1])->with(['user'])->with(array('bookmark' => function($query) { $query->where('user_id', Auth::user()->id); }))->orderBy('created_at', 'desc')->with(array('comments' => function($query) { $query->with('replies.user')->limit(2)->with('user');}))->paginate(10);
             }else{
                 return Want::where(['status'=> 1])->with(['user'])->
