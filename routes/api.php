@@ -205,4 +205,11 @@ Route::get('/ml', function (Request $request) {
     return Want::find(1)->user_id;
 });
 
+/**
+ * All payment routes 
+ */
+Route::middleware('auth:api')->group(function () {
+    Route::post('pay', 'PaymentController@payFulfiller');
+});
+
 

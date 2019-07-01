@@ -1,33 +1,26 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Classes\Card;
 use Exception;
-use App\Classes\Transaction;
+use App\Classes\Payment;
 
 class PaymentController extends Controller
 {
     /**
-     * Returns a token of the card informtion entred by the user  
-     * */
-    public function test(Request $request){
-        $x = new Transaction();
-        return $x->pay($request);
-    }
-
-    /**
      * send money to the fulfiller
-     * Input: card_id, amout, toAccount 
+     * Input: card_id, amount, want_id, to_user
      */
     public function payFulfiller(Request $request)
     {
         try{
-            $pay = new Transaction();
-            $pay->pay($request);
+            $pay = new Payment($request->to_user,  $request->amount,$request->want_id);
+            $pay->pay($request->card_id);
             return response()->json(['message'=> 'Your payment is successful'], 200);
         }catch(Exception $e){
+            return $e->getMessage();
             return "Something went wrong while trying to make payment. Please try again";
         }
     }
