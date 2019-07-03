@@ -25,5 +25,20 @@ class PaymentController extends Controller
         }
     }
 
+    /**
+     * Get the current balance
+     */
+    public function getBalance(){
+        try{
+            \Stripe\Stripe::setApiKey("sk_test_7DFayyE5PlPHvjyRAv07KC9p");
+            $balance = \Stripe\Balance::retrieve(
+                ["stripe_account" => Auth::user()->stripe->account_id]
+            );
+            return $balance;
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+    }
+
     
 }

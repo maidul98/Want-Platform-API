@@ -187,29 +187,13 @@ Route::middleware('auth:api')->group(function () {
     Route::post('device-token', 'DeviceTokenController@addOrUpdateToken');
 });
 
-use App\Notifications\NotifyPostOwnerOfComment;
-Route::get('/ml', function (Request $request) {
-    // $user = User::find(1);
-    // // Prepare the request for recombee server, we need 10 recommended items for a given user.
-    // $recommendations = Laracombee::recommendTo($user, 10)->wait();
-    // $recc_id = $recommendations['recommId'];
-    // $reccs = $recommendations['recomms'];
-    // $recommended_ids = [];
-    // foreach($reccs as $x){
-    //     array_push($recommended_ids, $x['id']);
-    // }
-    // //get array of ids
-
-    // return Want::findMany($recommended_ids);
-    // User::findOrFail(1)->notify(new NotifyPostOwnerOfComment(3, "HEYYY" ));
-    return Want::find(1)->user_id;
-});
 
 /**
  * All payment routes 
  */
 Route::middleware('auth:api')->group(function () {
     Route::post('pay', 'PaymentController@payFulfiller');
+    Route::get('balance', 'PaymentController@getBalance');
 });
 
 
