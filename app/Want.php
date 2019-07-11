@@ -10,16 +10,33 @@ class Want extends Model {
     //recommendations 
     public static $laracombee = ['title' => 'string', 'description'=> 'string', 'cost' => 'double', 'category_id'=> 'int', 'created_at'=> 'timestamp', 'user_id'=>'int'];
     
+    //relations
+    protected $with=['status', 'category'];
+
     use Searchable; //enable search by algolia 
     use \Staudenmeir\EloquentEagerLimit\HasEagerLimit; //limit the number of comments per want 
 
-    protected $fillable = ['title', 'description', 'user_id', 'cost', 'status'];
+    protected $fillable = ['title', 'description', 'user_id', 'cost', 'status','fulfiller_id'];
 
     /**
      * A user has Want(s)
      */
     public function user(){
         return $this->belongsTo('App\User');
+    }
+
+    /**
+     * Get the category of the Want
+     */
+    public function category(){
+        return $this->belongsTo('App\Category', 'category_id');
+    }
+
+    /**
+     * Get the status of the Want
+     */
+    public function status(){
+        return $this->belongsTo('App\WantStatus', 'status_id');
     }
 
     /**

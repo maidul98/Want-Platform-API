@@ -18,7 +18,7 @@ class Payment{
      * All payments will have a user that one will pay to, an amount they will pay, and it will be related to a Want.
      * You will only be able to make transactions associated with a Want. 
      */
-    public function __construct($to_user_id, $amount, $want_id){
+    public function __construct($to_user_id, $amount, $want_id, $complete = false){
         //set stripe key 
         \Stripe\Stripe::setApiKey(env("STRIPE_API_SECRET")); 
 
@@ -29,6 +29,9 @@ class Payment{
 
         //set want id 
         $this->want_id = $want_id;
+
+        // check to see if this post should be marked as complete
+        $this->complete = $complete;
 
         // check if Want is taken already 
         if(Want::findOrFail($want_id)->status != 1){
@@ -55,12 +58,19 @@ class Payment{
 
         // if the charge went through
         if($charge){
+            // make log of Transaction
             Transaction::create(
                 ['user_id' => Auth::user()->id,
                  'fulfiller_id' => $this->to_user_id,
                  'want_id'=> $this->want_id, 
                  'amount_paid'=>$this->amount, 
                  'status'=>1]);
+
+            // change the status of the Want post if this payment markes it complete 
+            if($this->complete){
+                Want::findOrFail($this->want_id)->update(['status' => 4]);
+            }
+            
         }else{
             throw new Excaption('The charge did not process.');
         }

@@ -40,5 +40,12 @@ class PaymentController extends Controller
         }
     }
 
+    /**
+     * Get all the transactions for this user 
+     */
+//     \Stripe\Stripe::setApiKey("sk_test_7DFayyE5PlPHvjyRAv07KC9p");
+
+// \Stripe\Charge::all(["limit" => 3]);
+
     
 }

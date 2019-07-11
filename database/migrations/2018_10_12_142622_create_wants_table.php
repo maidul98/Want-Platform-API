@@ -19,7 +19,7 @@ class CreateWantsTable extends Migration
             $table->longText('description')->nullable();
             $table->integer('user_id');
             $table->integer('cost');
-            $table->integer('status');
+            $table->integer('status_id');
             $table->integer('category_id');
             $table->string('fulfiller_id')->nullable();
             $table->timestamps();

@@ -19,11 +19,7 @@ use App\Conversation;
 
 use Laracombee;
 use App\Notifications\Notifyfulfiller;
-
 use Illuminate\Support\Facades\DB;
-
-
-// require_once base_path('vendor/paralleldots/apis/autoload.php');
 
 class WantController extends Controller
 {
@@ -112,32 +108,57 @@ class WantController extends Controller
     }
 
     /**
-     * Accect the want: creates chat, add want to active wants
-     * Input: want_id 
+     * Assign a fulfiller to a Want.
+     * Input: want_id, fulfiller_id
      */
-    public function acceptWant(Request $request){
+    public function assign_to_fulfiller(Request $request){
         try{
-            if(Want::findOrFail($request->want_id)->status == 1){
-                //update want status
+            // make sure the user exists
+            User::findOrFail($request->fulfiller_id);
 
-                //find want
-                $want = Want::findOrFail($request->want_id);
-                $wanter = User::findOrFail($want->user_id);
-                
-                //create a conversation
-                Conversation::create(['wanter_id' => $wanter->id, 'fulfiller_id' => Auth::user()->id, 'want_id' => $request->want_id]);
-
-                //notify the user that he has been accpetded
-                User::find(1)->notify(new Notifyfulfiller($wanter, Auth::user(), "Congrants! You have been chosen", $want));
+            $want = Want::findOrFail($request->want_id);
+            if($want->fulfiller_id == null && $want->user_id == Auth::user()->id) {
+                Want::findOrFail($request->want_id)->update(['fulfiller_id'=>$request->fulfiller_id, 'status'=>3]);
+                return "You have successfully assigned a fulfiller to this Want";
+            }else{
+                return "Something went wrong";
             }
         }catch(Excation $e){
-            return $e->getMessage();
+            return response()->json(['error'=> 'Something went wrong, please try again'], 400);  
         }
     }
 
-    public function all(){
-        return Want::all();
+    /**
+     * Get all the Wants the user posted with the status of each Want 
+     */
+     public function UserWants(Request $request){
+         try{
+             return Want::where(['user_id'=>Auth::user()->id])->get();
+         }catch(Excetion  $e){
+            return response()->json(['error'=> 'Something went wrong, please try again'], 400);  
+         }
+     }
+
+     /**
+     * Get all the Wants that are marked active
+     */
+    public function activeWants(Request $request){
+        try{
+            return Want::where(['user_id'=>Auth::user()->id, 'status_id' => 1])->get();
+        }catch(Excetion  $e){
+           return response()->json(['error'=> 'Something went wrong, please try again'], 400);  
+        }
     }
-    
+
+    /**
+     * Get all the Wants that are marked active
+     */
+    public function inProgress(Request $request){
+        try{
+            return Want::where(['user_id'=>Auth::user()->id, 'status_id' => 3])->get();
+        }catch(Excetion  $e){
+           return response()->json(['error'=> 'Something went wrong, please try again'], 400);  
+        }
+    }
 
 }

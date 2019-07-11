@@ -64,10 +64,10 @@ Route::middleware('auth:api')->group(function () {
     Route::put('want/{id}', 'WantController@update');
     Route::delete('want/{id}', 'WantController@destroy');
     Route::get('want/{id}', ['uses' =>'WantController@show']);
-
-    Route::post('accept', ['uses' => 'WantController@acceptWant']);
-
-    Route::get('all', ['uses' => 'WantController@all']);
+    Route::post('assign-want', ['uses' => 'WantController@assign_to_fulfiller']);
+    Route::get('posted-wants', ['uses' => 'WantController@UserWants']);
+    Route::get('in-progress-wants', ['uses' => 'WantController@inProgress']);
+    Route::get('active-wants', ['uses' => 'WantController@activeWants']);
 });
 
 /**
@@ -187,6 +187,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('device-token', 'DeviceTokenController@addOrUpdateToken');
 });
 
+//end of mobile
+
 
 /**
  * All payment routes 
@@ -196,4 +198,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('balance', 'PaymentController@getBalance');
 });
 
+// if pages are not found
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Page Not Found. If error persists, contact info@website.com'], 404);
+});
 
