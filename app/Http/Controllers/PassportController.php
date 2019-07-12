@@ -122,21 +122,21 @@ class PassportController extends Controller
     {
         try {
             $user = Socialite::driver('google')->stateless()->user();
+            return $user;
+            // // check if they're an existing user
+            // $existingUser = User::where('email', $user->email)->first();
+            // if($existingUser){
+            //     $token = $existingUser->createToken('login')->accessToken;
+            //     return response()->json(['token' => $token], 200);
+            // } else {
+            //     $register = new Register($user->user['given_name'], 
+            //     $user->user['family_name'], $user->user['email'], null);
+            //     $register->register();
+            //     Auth::loginUsingId($register->user->id);
+            //     return Auth::user();
+            // }
         } catch (Exception $e) {
-            return response()->json(['error' => 'Somthing went wrong'], 400);
-        }
-
-        // // check if they're an existing user
-        $existingUser = User::where('email', $user->email)->first();
-        if($existingUser){
-            $token = $existingUser->createToken('login')->accessToken;
-            return response()->json(['token' => $token], 200);
-        } else {
-            $register = new Register($user->user['given_name'], 
-            $user->user['family_name'], $user->user['email'], null);
-            $register->register();
-            Auth::loginUsingId($register->user->id);
-            return Auth::user();
+            return response()->json(['error' => 'Somthing went wrong. The Google login was not successful.'], 400);
         }
     }
 
