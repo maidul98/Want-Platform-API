@@ -122,7 +122,7 @@ class PassportController extends Controller
     {
         try {
             $user = Socialite::driver('google')->stateless()->user();
-            return $user;
+            return $user->email;
             // // check if they're an existing user
             // $existingUser = User::where('email', $user->email)->first();
             // if($existingUser){
